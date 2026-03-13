@@ -323,6 +323,9 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
     <div style="font-family:Caveat,cursive;font-size:1.9rem;font-weight:700">Submitted &#10003;</div>
     <p style="font-size:.88rem;color:var(--ink2);font-weight:300;max-width:260px;line-height:1.5">Waiting for the other person to finish&#8230;</p>
     <button class="btn btnS" id="btnCheckNow" style="max-width:200px">Check now</button>
+      <button class="btn btnG" id="btnBrowseFree" style="font-size:.82rem;color:var(--ink3);margin-top:.25rem">
+        &#127760; Browse freely &mdash; we&#8217;ll notify you
+      </button>
   </div>
 </div>
 
@@ -643,6 +646,7 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
   });
 
   document.getElementById("btnCheckNow").addEventListener("click", function() { checkAndAnalyze(true); });
+  document.getElementById("btnBrowseFree").addEventListener("click", function() { requestNotifyAndBrowse(); });
   document.getElementById("btnAnalysisHome").addEventListener("click", function() { showScreen("home"); });
   document.getElementById("btnResultsHome").addEventListener("click", function() { showScreen("home"); });
   document.getElementById("btnShare").addEventListener("click", function() {
@@ -677,12 +681,46 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
     pollTimer = setInterval(function(){ checkAndAnalyze(false); }, 3500);
   }
 
+  function requestNotifyAndBrowse() {
+    if (!("Notification" in window)) {
+      window.open(window.location.href, '_blank');
+      return;
+    }
+    if (Notification.permission === "granted") {
+      window.open(window.location.href + '?waiting=' + sessCode, '_blank');
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === "granted") {
+          new Notification("PsycheDraw", {
+            body: "We’ll let you know when they’re done!",
+            icon: window.location.origin + "/favicon.ico"
+          });
+        }
+        window.open(window.location.href + '?waiting=' + sessCode, '_blank');
+      });
+    } else {
+      window.open(window.location.href + '?waiting=' + sessCode, '_blank');
+    }
+  }
+
+  function fireNotification() {
+    if ("Notification" in window && Notification.permission === "granted") {
+      var n = new Notification("PsycheDraw – They’re done! 🎉", {
+        body: "Your drawing partner finished. Tap to see your compatibility reading.",
+        icon: window.location.origin + "/favicon.ico",
+        requireInteraction: true
+      });
+      n.onclick = function() { window.focus(); n.close(); };
+    }
+  }
+
   function checkAndAnalyze(force) {
     fetch("/api/session/"+sessCode)
     .then(function(r){ return r.json(); })
     .then(function(d) {
       if (d.hasA && d.hasB) {
         if (pollTimer) clearInterval(pollTimer);
+        fireNotification();
         return fetch("/api/session/"+sessCode+"/analyze", {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"})
         .then(function(r){ return r.json().then(function(res){ return {ok:r.ok, d:res, nameA:d.nameA, nameB:d.nameB}; }); })
         .then(function(res){ if(!res.ok) throw new Error(res.d.error||"Error"); renderCompat(res.d, res.nameA, res.nameB); showScreen("results"); });
@@ -748,6 +786,19 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
   window.addEventListener("resize", function() {
     if (!document.getElementById("draw").classList.contains("off")) resizeCanvas();
   });
+
+  // Handle ?waiting= param (resume after browsing away)
+  var waitingParam = new URLSearchParams(window.location.search).get("waiting");
+  if (waitingParam) {
+    sessCode = waitingParam.toUpperCase();
+    mode = "session";
+    showScreen("waiting");
+    startPoll();
+    // Request notification permission proactively
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }
 
   // Handle ?join= param
   var joinParam = new URLSearchParams(window.location.search).get("join");
