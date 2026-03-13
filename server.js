@@ -4,9 +4,17 @@ const fetch = require('node-fetch');
 
 const app = express();
 app.use(express.json({ limit: '20mb' }));
+// Force no-cache for index.html so browsers always get fresh JS
+app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ── SESSION STORE ────────────────────────────────────────────────
+// ââ SESSION STORE ââââââââââââââââââââââââââââââââââââââââââââââââ
 const sessions = new Map();
 function makeCode() { return Math.random().toString(36).slice(2,8).toUpperCase(); }
 setInterval(() => { const now=Date.now(); for(const [k,v] of sessions) if(now-v.created>7200000) sessions.delete(k); }, 600000);
@@ -103,7 +111,7 @@ app.post('/api/analyze', async (req, res) => {
 });
 
 function buildSoloSystem() {
-  return `You are an expert in projective psychological assessment (HTP technique) with knowledge of MBTI personality typing. Analyse three drawings (house, tree, person) as a unified psychological portrait. Be specific, warm, and insightful — not clinical.
+  return `You are an expert in projective psychological assessment (HTP technique) with knowledge of MBTI personality typing. Analyse three drawings (house, tree, person) as a unified psychological portrait. Be specific, warm, and insightful â not clinical.
 
 Return ONLY valid JSON:
 {
@@ -131,7 +139,7 @@ ei/sn/tf/jp are 0-100 where 100 = fully E/N/F/P and 0 = fully I/S/T/J.`;
 }
 
 function buildCompatSystem() {
-  return `You are an expert in projective psychological assessment (HTP technique), MBTI personality typing, and interpersonal compatibility. Analyse two sets of three drawings each (house, tree, person) and provide both individual profiles and a compatibility reading. Be warm, specific, and fun — not clinical.
+  return `You are an expert in projective psychological assessment (HTP technique), MBTI personality typing, and interpersonal compatibility. Analyse two sets of three drawings each (house, tree, person) and provide both individual profiles and a compatibility reading. Be warm, specific, and fun â not clinical.
 
 Return ONLY valid JSON:
 {
@@ -151,7 +159,7 @@ Return ONLY valid JSON:
   "compatLabel": "evocative short label e.g. 'Creative friction' or 'Deep resonance'",
   "sharedStrengths": "1-2 sentences",
   "growthEdges": "1-2 sentences",
-  "chemistryNote": "1 fun evocative sentence — cocktail napkin energy"
+  "chemistryNote": "1 fun evocative sentence â cocktail napkin energy"
 }
 ei/sn/tf/jp: 100=fully E/N/F/P, 0=fully I/S/T/J.`;
 }
