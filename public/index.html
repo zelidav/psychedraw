@@ -199,6 +199,33 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
 .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
 @keyframes dot{0%,80%,100%{opacity:.15}40%{opacity:1}}
 .off{display:none!important}
+
+/* FEEDBACK MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(28,20,16,.45);z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .22s}
+.modal-backdrop.show{opacity:1;pointer-events:all}
+.modal{position:fixed;bottom:0;left:0;right:0;background:var(--napkin);
+  border-radius:16px 16px 0 0;padding:1.5rem 1.25rem calc(1.5rem + var(--sab));
+  z-index:301;transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.modal-backdrop.show .modal{transform:translateY(0)}
+.modal-title{font-family:"Caveat",cursive;font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
+.modal-sub{font-size:.84rem;color:var(--ink2);font-weight:300;margin-bottom:1.1rem;line-height:1.5}
+.stars{display:flex;gap:10px;justify-content:center;margin-bottom:1.1rem}
+.star{font-size:2rem;cursor:pointer;transition:transform .12s;filter:grayscale(1);opacity:.4}
+.star.lit{filter:none;opacity:1;transform:scale(1.15)}
+.star:active{transform:scale(.9)}
+.feedback-input{width:100%;border:1.5px solid var(--border2);border-radius:9px;
+  padding:11px 13px;font-family:"DM Sans",sans-serif;font-size:.86rem;
+  background:var(--paper2);color:var(--ink);outline:none;resize:none;
+  line-height:1.5;margin-bottom:1rem}
+.feedback-input:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:8px}
+/* SOLO SHARE FAB */
+.solo-share-fab{position:fixed;bottom:calc(1.1rem + var(--sab));right:1.1rem;
+  width:50px;height:50px;border-radius:50%;background:var(--ink);color:#fff;
+  border:none;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.22);cursor:pointer;z-index:50;transition:transform .12s}
+.solo-share-fab:active{transform:scale(.9)}
 </style>
 </head>
 <body>
@@ -647,7 +674,7 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
 
   document.getElementById("btnCheckNow").addEventListener("click", function() { checkAndAnalyze(true); });
   document.getElementById("btnBrowseFree").addEventListener("click", function() { requestNotifyAndBrowse(); });
-  document.getElementById("btnAnalysisHome").addEventListener("click", function() { showScreen("home"); });
+  document.getElementById("btnAnalysisHome").addEventListener("click", function() { showScreen("home"); document.getElementById("btnSoloShare").classList.add("off"); hideFeedback(); });
   document.getElementById("btnResultsHome").addEventListener("click", function() { showScreen("home"); });
   document.getElementById("btnShare").addEventListener("click", function() {
     if (navigator.share) navigator.share({title:"My PsycheDraw Reading", url:window.location.href});
@@ -751,6 +778,56 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
       '<div class="mbars">'+barsHtml+'</div><div class="msketch">'+m.sketch+'</div></div>';
   }
 
+  var feedbackRating = 0;
+
+  function showFeedback() {
+    document.getElementById("feedbackBackdrop").classList.add("show");
+  }
+
+  function hideFeedback() {
+    document.getElementById("feedbackBackdrop").classList.remove("show");
+  }
+
+  document.getElementById("starRow").addEventListener("click", function(e) {
+    var star = e.target.closest(".star"); if (!star) return;
+    feedbackRating = +star.dataset.v;
+    document.querySelectorAll(".star").forEach(function(s) {
+      s.classList.toggle("lit", +s.dataset.v <= feedbackRating);
+    });
+  });
+
+  document.getElementById("btnFeedbackSkip").addEventListener("click", hideFeedback);
+
+  document.getElementById("btnFeedbackSend").addEventListener("click", function() {
+    var text = document.getElementById("feedbackText").value.trim();
+    // Store locally — could POST to an endpoint later
+    var entry = {rating: feedbackRating, text: text, ts: Date.now()};
+    try { var prev = JSON.parse(localStorage.getItem("pd_feedback")||"[]"); prev.push(entry); localStorage.setItem("pd_feedback", JSON.stringify(prev)); } catch(e){}
+    hideFeedback();
+    // Brief thank-you toast
+    var toast = document.createElement("div");
+    toast.textContent = "Thanks ♥";
+    toast.style.cssText = "position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:.85rem;z-index:400;pointer-events:none;opacity:1;transition:opacity .4s";
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.opacity="0"; setTimeout(function(){ toast.remove(); }, 400); }, 1800);
+  });
+
+  document.getElementById("feedbackBackdrop").addEventListener("click", function(e) {
+    if (e.target === this) hideFeedback();
+  });
+
+  document.getElementById("btnSoloShare").addEventListener("click", function() {
+    var mbti = document.querySelector(".mtype");
+    var mbtiText = mbti ? " I got " + mbti.textContent + "." : "";
+    if (navigator.share) {
+      navigator.share({title:"My PsycheDraw Reading", text:"Just got my personality reading from PsycheDraw." + mbtiText + " Try it:", url:window.location.origin});
+    } else {
+      navigator.clipboard.writeText(window.location.origin).then(function(){ 
+        alert("Link copied!"); 
+      });
+    }
+  });
+
   function renderSolo(d) {
     var pills = (d.traits||[]).map(pill).join("");
     var elems = ["house","tree","person"].filter(function(k){return d[k];}).map(function(k){
@@ -761,6 +838,13 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
       mbtiCard(d.mbti)+elems+
       '<div class="rcard"><div class="rlabel">Dimensions</div><div class="srows">'+scoreRows(d.scores)+'</div></div>'+
       (d.shadow ? '<div class="rcard" style="border-left:3px solid var(--accent)"><div class="rlabel">Shadow</div><p style="font-style:italic">'+d.shadow+'</p></div>' : "");
+    // Show share fab
+    document.getElementById("btnSoloShare").classList.remove("off");
+    // Reset and show feedback after a pause
+    feedbackRating = 0;
+    document.querySelectorAll(".star").forEach(function(s){ s.classList.remove("lit"); });
+    document.getElementById("feedbackText").value = "";
+    setTimeout(showFeedback, 2200);
   }
 
   function personBlock(p, name) {
@@ -811,5 +895,31 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
 
 })();
 </script>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-backdrop" id="feedbackBackdrop">
+  <div class="modal" id="feedbackModal">
+    <div class="modal-title">Did we get you right? &#129300;</div>
+    <div class="modal-sub">Rate how accurate your reading felt</div>
+    <div class="stars" id="starRow">
+      <span class="star" data-v="1">&#9733;</span>
+      <span class="star" data-v="2">&#9733;</span>
+      <span class="star" data-v="3">&#9733;</span>
+      <span class="star" data-v="4">&#9733;</span>
+      <span class="star" data-v="5">&#9733;</span>
+    </div>
+    <textarea class="feedback-input" id="feedbackText" rows="3" placeholder="Anything feel off? Spot on? Tell us&#8230;"></textarea>
+    <div class="modal-actions">
+      <button class="btn btnS" id="btnFeedbackSkip" style="flex:1;padding:12px">Skip</button>
+      <button class="btn btnP" id="btnFeedbackSend" style="flex:2;padding:12px">Send &#10003;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOLO SHARE FAB -->
+<button class="solo-share-fab off" id="btnSoloShare">
+  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+</button>
+
 </body>
 </html>
