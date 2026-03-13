@@ -2,618 +2,673 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>PsycheDraw</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#1a1410;--ink-2:#4a4540;--ink-3:#8a8480;
-  --paper:#faf8f4;--paper-2:#f2ede4;--paper-3:#e8e0d0;
-  --accent:#c4572a;--accent-2:#8b3a1a;--sage:#4a7060;--gold:#c9952a;
-  --border:rgba(26,20,16,0.12);--border-2:rgba(26,20,16,0.22);
-  --r:10px;--shadow:0 2px 16px rgba(26,20,16,0.1);
-  --toolbar-h:64px;--safe-bottom:env(safe-area-inset-bottom,0px);
+  --ink:#1c1410;--ink-2:#4a4036;--ink-3:#8a7f78;
+  --paper:#f9f5ee;--paper-2:#f0e8d8;--paper-3:#e4d8c4;
+  --napkin:#fffdf7;
+  --accent:#b8441e;--accent-2:#8a3014;
+  --sage:#3d6652;--gold:#b8820a;--blue:#2a4a7a;
+  --border:rgba(28,20,16,0.14);--border-2:rgba(28,20,16,0.24);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
-html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 
-/* ── SCREENS ── */
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:transform .3s ease,opacity .3s ease}
-.screen.hidden{transform:translateY(20px);opacity:0;pointer-events:none}
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--paper);transition:opacity .25s ease,transform .25s ease}
+.screen.hidden{opacity:0;transform:translateY(12px);pointer-events:none}
 
-/* ── TOPBAR ── */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));background:var(--paper);border-bottom:0.5px solid var(--border-2);flex-shrink:0;z-index:10}
-.logo{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--ink)}.logo em{color:var(--accent);font-style:italic}
-.topbar-right{display:flex;gap:8px;align-items:center}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;padding-top:max(10px,var(--safe-top));background:var(--paper);border-bottom:1px solid var(--border-2);flex-shrink:0}
+.logo{font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.logo em{color:var(--accent)}
 
-/* ── HOME ── */
-#home{background:var(--paper);justify-content:flex-start;overflow-y:auto}
-.home-hero{text-align:center;padding:2rem 1.5rem 1rem}
-.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:.6rem}
-.home-hero h1{font-family:'DM Serif Display',serif;font-size:2.2rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:.6rem}
-.home-hero h1 em{color:var(--accent);font-style:italic}
-.home-hero p{color:var(--ink-2);font-size:.9rem;font-weight:300;max-width:300px;margin:0 auto}
-.home-cards{padding:0 1rem 1rem;display:flex;flex-direction:column;gap:12px}
-.home-card{background:var(--paper);border:0.5px solid var(--border-2);border-radius:14px;padding:1.25rem;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s,box-shadow .12s;display:flex;align-items:center;gap:14px}
-.home-card:active{transform:scale(.98);box-shadow:none}
-.home-card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
-.home-card-icon.solo{background:#fef0e8}
-.home-card-icon.session{background:#e8f2ee}
-.home-card-text h3{font-size:.95rem;font-weight:500;margin-bottom:3px}
-.home-card-text p{font-size:.78rem;color:var(--ink-3);font-weight:300;line-height:1.4}
-.home-card-arrow{margin-left:auto;color:var(--ink-3);font-size:18px}
+/* HOME */
+#home{overflow-y:auto}
+.home-hero{padding:1.5rem 1.25rem .75rem;text-align:center}
+.hero-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:.5rem}
+.home-hero h1{font-family:'Caveat',cursive;font-size:2.4rem;font-weight:700;line-height:1.05;color:var(--ink);margin-bottom:.4rem}
+.home-hero h1 em{color:var(--accent)}
+.home-hero p{font-size:.82rem;color:var(--ink-2);font-weight:300;line-height:1.5;max-width:280px;margin:0 auto}
 
-/* ── SESSION LOBBY ── */
-#lobby{background:var(--paper);justify-content:center;align-items:center;padding:2rem}
-.lobby-inner{width:100%;max-width:360px;text-align:center}
-.lobby-inner h2{font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:.5rem}
-.lobby-inner p{font-size:.85rem;color:var(--ink-2);font-weight:300;margin-bottom:1.5rem}
-.code-display{font-family:'DM Serif Display',serif;font-size:3rem;letter-spacing:.15em;color:var(--accent);background:var(--paper-2);border-radius:12px;padding:.75rem 1rem;margin:1rem 0;border:0.5px solid var(--border-2)}
-.lobby-status{display:flex;gap:10px;justify-content:center;margin:1rem 0}
-.status-dot{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ink-3)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--paper-3)}
-.dot.on{background:#4a7060;box-shadow:0 0 0 3px rgba(74,112,96,.2)}
-.join-input{width:100%;padding:14px 16px;border:0.5px solid var(--border-2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:1.1rem;text-align:center;letter-spacing:.1em;text-transform:uppercase;background:var(--paper);color:var(--ink);margin-bottom:10px;outline:none}
-.join-input:focus{border-color:var(--accent)}
+/* NAPKIN CARD */
+.napkin{background:var(--napkin);border-radius:4px;box-shadow:2px 3px 12px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.06);position:relative;margin:0 1.25rem 1rem;padding:1.1rem}
+.napkin::before{content:'';position:absolute;inset:0;border-radius:4px;background:repeating-linear-gradient(0deg,transparent,transparent 23px,rgba(0,100,200,.06) 24px);pointer-events:none}
+.napkin-title{font-family:'Caveat',cursive;font-size:1.1rem;font-weight:600;color:var(--ink);margin-bottom:.5rem}
+.napkin p{font-size:.8rem;color:var(--ink-2);line-height:1.55;font-weight:300}
 
-/* ── BUTTONS ── */
-.btn{width:100%;padding:15px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary{background:var(--accent);color:#fff}.btn-primary:active{background:var(--accent-2)}
-.btn-secondary{background:var(--paper-2);color:var(--ink);border:0.5px solid var(--border-2)}.btn-secondary:active{background:var(--paper-3)}
-.btn-ghost{background:none;color:var(--ink-3);font-size:.85rem;padding:10px}.btn-ghost:active{color:var(--ink)}
-.btn:disabled{opacity:.5;pointer-events:none}
-.btn-sm{width:auto;padding:9px 16px;font-size:.82rem;border-radius:8px}
+.home-actions{padding:0 1.25rem 2rem;display:flex;flex-direction:column;gap:10px}
+.big-btn{width:100%;padding:16px 18px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;transition:all .12s;position:relative;overflow:hidden}
+.big-btn:active{transform:scale(.98)}
+.big-btn .btn-icon{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.big-btn .btn-label{flex:1}
+.big-btn .btn-label strong{display:block;font-size:.92rem;margin-bottom:2px}
+.big-btn .btn-label span{font-size:.75rem;opacity:.7;font-weight:300}
+.big-btn .btn-arrow{font-size:1.2rem;opacity:.4}
+.btn-solo{background:#fef0e6;color:var(--ink)}.btn-solo .btn-icon{background:#fddcc8}
+.btn-session{background:#e8f2ec;color:var(--ink)}.btn-session .btn-icon{background:#c8e8d4}
 
-/* ── DRAW SCREEN ── */
+/* PROGRESS BAR */
+.progress-bar{display:flex;gap:6px;padding:10px 14px;background:var(--paper);border-bottom:1px solid var(--border);flex-shrink:0}
+.progress-step{flex:1;height:4px;border-radius:2px;background:var(--paper-3);transition:background .3s ease;position:relative}
+.progress-step.done{background:var(--accent)}
+.progress-step.active{background:var(--accent);opacity:.5}
+
+/* DRAW SCREEN */
 #draw{background:#fff}
-.draw-topbar{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));background:var(--paper-2);border-bottom:0.5px solid var(--border);flex-shrink:0;z-index:10}
-.draw-title{font-size:.85rem;font-weight:500;flex:1;text-align:center;color:var(--ink-2)}
-canvas#c{display:block;flex:1;width:100%;touch-action:none;background:#fff;cursor:crosshair}
-.toolbar{display:flex;align-items:center;justify-content:space-around;padding:10px 12px;padding-bottom:max(10px,var(--safe-bottom));background:var(--paper-2);border-top:0.5px solid var(--border);flex-shrink:0;height:calc(var(--toolbar-h) + var(--safe-bottom));flex-wrap:nowrap;gap:4px}
-.tb-btn{min-width:40px;height:40px;border-radius:10px;border:0.5px solid var(--border-2);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--ink);flex-shrink:0;transition:all .1s}
+.draw-header{display:flex;align-items:center;gap:10px;padding:8px 12px;padding-top:max(8px,var(--safe-top));background:var(--paper-2);border-bottom:1px solid var(--border);flex-shrink:0}
+.step-label{font-family:'Caveat',cursive;font-size:1.2rem;font-weight:600;color:var(--accent);flex:1;text-align:center}
+.step-hint{font-size:.7rem;color:var(--ink-3);text-align:center;padding:4px 12px;background:var(--paper-2);border-bottom:1px solid var(--border);flex-shrink:0;font-style:italic}
+
+canvas#c{display:block;flex:1;width:100%;touch-action:none;background:#fff}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;padding-bottom:max(8px,var(--safe-bottom));background:var(--paper-2);border-top:1px solid var(--border);flex-shrink:0;gap:6px}
+.tb-group{display:flex;gap:4px;align-items:center}
+.tb-btn{width:38px;height:38px;border-radius:8px;border:1px solid var(--border-2);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);transition:all .1s;flex-shrink:0;font-size:14px}
 .tb-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.tb-btn:active{transform:scale(.93)}
-.color-row{display:flex;gap:5px;align-items:center}
-.cdot{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:all .1s}
-.cdot.active{border-color:var(--ink);transform:scale(1.2)}
-.size-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}
-.size-slider{width:60px;height:3px;-webkit-appearance:none;appearance:none;background:var(--paper-3);border-radius:2px;outline:none}
-.size-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink)}
-.pressure-badge{font-size:9px;color:var(--ink-3);letter-spacing:.05em;text-transform:uppercase}
+.tb-btn:active{transform:scale(.9)}
+.cdot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:all .12s}
+.cdot.active{border-color:var(--ink);transform:scale(1.2);box-shadow:0 0 0 2px var(--paper)}
+.size-slider{width:52px;height:3px;-webkit-appearance:none;appearance:none;background:var(--paper-3);border-radius:2px;outline:none;cursor:pointer}
+.size-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ink);cursor:pointer}
+.next-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0 16px;height:38px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .12s}
+.next-btn:active{background:var(--accent-2);transform:scale(.97)}
 
-/* ── WAITING ── */
-#waiting{background:var(--paper);justify-content:center;align-items:center;text-align:center;padding:2rem;gap:1rem}
-#waiting h2{font-family:'DM Serif Display',serif;font-size:1.5rem}
-#waiting p{font-size:.85rem;color:var(--ink-2);font-weight:300;max-width:280px}
-.spinner{width:40px;height:40px;border:2px solid var(--paper-3);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto}
+/* TRANSITION OVERLAY */
+.step-transition{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:1rem;text-align:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.step-transition.show{opacity:1;pointer-events:all}
+.step-transition .big-emoji{font-size:3.5rem}
+.step-transition h2{font-family:'Caveat',cursive;font-size:2rem;font-weight:700;color:var(--ink)}
+.step-transition p{font-size:.85rem;color:var(--ink-2);font-weight:300;max-width:260px}
+.step-transition .tap-hint{font-size:.75rem;color:var(--ink-3);margin-top:.5rem;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* UPLOAD ZONE */
+.upload-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin:8px 12px;padding:1rem;border:2px dashed var(--border-2);border-radius:8px;cursor:pointer;background:var(--paper-2);transition:all .12s}
+.upload-zone:active{border-color:var(--accent);background:#fef5f0}
+.upload-zone p{font-size:.75rem;color:var(--ink-3);text-align:center}
+.upload-zone .uz-icon{font-size:1.5rem}
+
+/* LOBBY */
+#lobby{overflow-y:auto}
+.lobby-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;gap:1rem;min-height:0}
+.code-big{font-family:'Caveat',cursive;font-size:3.5rem;font-weight:700;letter-spacing:.12em;color:var(--accent);background:var(--napkin);border-radius:8px;padding:.5rem 1.5rem;border:1px solid var(--border-2);box-shadow:2px 3px 10px rgba(0,0,0,.08);text-align:center}
+.join-input{width:100%;max-width:300px;padding:14px;border:1.5px solid var(--border-2);border-radius:8px;font-family:'Caveat',cursive;font-size:1.8rem;text-align:center;letter-spacing:.15em;text-transform:uppercase;background:var(--napkin);color:var(--ink);outline:none;transition:border-color .15s}
+.join-input:focus{border-color:var(--accent)}
+.status-row{display:flex;gap:16px;justify-content:center}
+.sdot{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-3)}
+.sdot-circle{width:8px;height:8px;border-radius:50%;background:var(--paper-3)}
+.sdot-circle.on{background:var(--sage)}
+
+/* WAITING */
+#waiting{align-items:center;justify-content:center;gap:1.25rem;text-align:center;padding:2rem}
+.spinner{width:36px;height:36px;border:2px solid var(--paper-3);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.poll-status{font-size:.8rem;color:var(--ink-3)}
 
-/* ── RESULTS ── */
-#results{background:var(--paper);overflow-y:auto}
-.results-inner{padding:1rem;max-width:600px;margin:0 auto;padding-bottom:calc(2rem + var(--safe-bottom))}
-.result-hero{text-align:center;padding:1rem 0 1.5rem}
-.compat-num{font-family:'DM Serif Display',serif;font-size:4rem;line-height:1}
-.compat-label{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
-.chemistry{font-size:.85rem;color:var(--ink-2);font-style:italic;margin-top:.5rem;padding:0 1rem}
-.section-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:6px}
-.card{background:var(--paper);border:0.5px solid var(--border-2);border-radius:12px;padding:1rem;margin-bottom:10px;box-shadow:var(--shadow)}
-.person-header{font-weight:500;font-size:.9rem;margin-bottom:.4rem}
-.person-summary{font-size:.8rem;color:var(--ink-2);font-weight:300;line-height:1.5;margin-bottom:.6rem}
-.pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.6rem}
-.pill{font-size:.7rem;padding:3px 9px;border-radius:100px;font-weight:500}
-.pill.warm{background:#fef0e8;color:#8b3a1a}.pill.cool{background:#e8f2ee;color:#2a5a46}.pill.neutral{background:var(--paper-3);color:var(--ink-2)}
-.score-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.score-label{font-size:.7rem;color:var(--ink-3);width:72px;flex-shrink:0}
-.score-bar-wrap{flex:1;height:4px;background:var(--paper-3);border-radius:2px;overflow:hidden}
-.score-bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
-.score-val{font-size:.7rem;font-weight:500;color:var(--ink-2);width:24px;text-align:right}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.shadow-note{background:var(--paper-2);border-left:2px solid var(--accent);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-size:.8rem;color:var(--ink-2);font-style:italic;line-height:1.5}
+/* RESULTS */
+#results{overflow-y:auto}
+.results-body{padding:1rem;max-width:540px;margin:0 auto;padding-bottom:calc(5rem + var(--safe-bottom))}
 
-/* ── ANALYSIS (solo) ── */
-#analysis{background:var(--paper);overflow-y:auto}
-.analysis-inner{padding:1rem;max-width:600px;margin:0 auto;padding-bottom:calc(2rem + var(--safe-bottom))}
+.mbti-card{background:var(--napkin);border-radius:6px;box-shadow:2px 3px 12px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.07);padding:1rem;margin-bottom:10px;position:relative}
+.mbti-card::before{content:'';position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(0deg,transparent,transparent 19px,rgba(0,100,200,.05) 20px);pointer-events:none}
+.mbti-type{font-family:'Caveat',cursive;font-size:2.8rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:.25rem}
+.mbti-bars{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.mbti-row{display:flex;align-items:center;gap:6px}
+.mbti-left{font-size:.7rem;color:var(--ink-3);width:18px;text-align:right;flex-shrink:0}
+.mbti-right{font-size:.7rem;color:var(--ink-3);width:18px;flex-shrink:0}
+.mbti-track{flex:1;height:6px;background:var(--paper-3);border-radius:3px;position:relative;overflow:hidden}
+.mbti-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.mbti-sketch{font-size:.78rem;color:var(--ink-2);font-style:italic;line-height:1.5;margin-top:.5rem;font-weight:300}
 
-/* ── SHARE BUTTON ── */
-.share-btn{position:fixed;bottom:calc(1rem + var(--safe-bottom));right:1rem;width:48px;height:48px;border-radius:50%;background:var(--ink);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.2);cursor:pointer;font-size:18px;z-index:50;transition:transform .12s}
-.share-btn:active{transform:scale(.92)}
+.compat-hero{text-align:center;padding:1rem 0 1.25rem}
+.compat-score{font-family:'Caveat',cursive;font-size:5rem;font-weight:700;line-height:1}
+.compat-lbl{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:2px}
+.compat-chem{font-family:'Caveat',cursive;font-size:1.05rem;color:var(--ink-2);margin-top:.5rem;padding:0 1rem;line-height:1.4}
 
-/* ── LOADING ── */
-.dots{display:flex;gap:4px;align-items:center;justify-content:center}
-.dots span{width:6px;height:6px;border-radius:50%;background:currentColor;animation:dot 1.2s infinite}
+.result-card{background:var(--napkin);border-radius:6px;box-shadow:2px 3px 10px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.06);padding:1rem;margin-bottom:10px}
+.result-card .rlabel{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:5px}
+.result-card p{font-size:.8rem;color:var(--ink-2);font-weight:300;line-height:1.55}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.pill{font-size:.68rem;padding:3px 9px;border-radius:100px;font-weight:500}
+.pill.warm{background:#feeee5;color:#7a2e10}.pill.cool{background:#e5f0ea;color:#235238}.pill.neu{background:var(--paper-3);color:var(--ink-2)}
+.scores-grid{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.srow{display:flex;align-items:center;gap:6px}
+.slbl{font-size:.68rem;color:var(--ink-3);width:64px;flex-shrink:0}
+.sbar{flex:1;height:4px;background:var(--paper-3);border-radius:2px;overflow:hidden}
+.sfill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.sval{font-size:.68rem;font-weight:500;color:var(--ink-2);width:22px;text-align:right}
+
+.share-fab{position:fixed;bottom:calc(1.25rem + var(--safe-bottom));right:1.25rem;width:50px;height:50px;border-radius:50%;background:var(--ink);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.22);cursor:pointer;font-size:19px;z-index:50;transition:transform .12s}
+.share-fab:active{transform:scale(.9)}
+
+/* BUTTONS */
+.btn{width:100%;padding:14px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:8px;max-width:320px}
+.btn-p{background:var(--accent);color:#fff}.btn-p:active{background:var(--accent-2)}
+.btn-s{background:var(--paper-2);color:var(--ink);border:1px solid var(--border-2)}.btn-s:active{background:var(--paper-3)}
+.btn-g{background:none;color:var(--ink-3);font-size:.8rem;padding:8px}.btn-g:active{color:var(--ink)}
+.btn:disabled{opacity:.45;pointer-events:none}
+
+/* ANALYSIS SCREEN */
+#analysis{overflow-y:auto}
+.analysis-body{padding:1rem;max-width:540px;margin:0 auto;padding-bottom:calc(2rem + var(--safe-bottom))}
+
+/* LOADING */
+.dots{display:flex;gap:5px;align-items:center;justify-content:center}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:dot 1.2s infinite}
 .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-@keyframes dot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+@keyframes dot{0%,80%,100%{opacity:.15}40%{opacity:1}}
 
 .hidden{display:none!important}
-.fade{animation:fadeUp .3s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:360px){.two-col{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
+<!-- TRANSITION OVERLAY -->
+<div class="step-transition" id="stepTransition" onclick="dismissTransition()">
+  <div class="big-emoji" id="transEmoji"></div>
+  <h2 id="transTitle"></h2>
+  <p id="transDesc"></p>
+  <div class="tap-hint">tap anywhere to start drawing</div>
+</div>
 
 <!-- HOME -->
 <div class="screen" id="home">
   <div class="topbar">
     <div class="logo">Psyche<em>Draw</em></div>
+    <div style="font-size:.7rem;color:var(--ink-3)">HTP · MBTI</div>
   </div>
-  <div class="home-hero">
-    <div class="eyebrow">House · Tree · Person</div>
-    <h1>What does your drawing <em>reveal?</em></h1>
-    <p>Draw freely. Our AI reads the visual language of your marks.</p>
-  </div>
-  <div class="home-cards">
-    <div class="home-card" onclick="startSolo()">
-      <div class="home-card-icon solo">🏠</div>
-      <div class="home-card-text">
-        <h3>Solo Reading</h3>
-        <p>Draw a house, tree &amp; person. Get your personality analysis.</p>
-      </div>
-      <div class="home-card-arrow">›</div>
+  <div style="flex:1;overflow-y:auto">
+    <div class="home-hero">
+      <div class="hero-tag">House · Tree · Person</div>
+      <h1>What does your scribble <em>say?</em></h1>
+      <p>Draw like nobody's watching. The AI reads between the lines.</p>
     </div>
-    <div class="home-card" onclick="showScreen('lobby'); setupLobby()">
-      <div class="home-card-icon session">🔗</div>
-      <div class="home-card-text">
-        <h3>Compatibility Session</h3>
-        <p>Draw on your device, someone else on theirs. Compare results.</p>
-      </div>
-      <div class="home-card-arrow">›</div>
+    <div class="napkin" style="margin:0 1.25rem .75rem">
+      <div class="napkin-title">✏️ How it works</div>
+      <p>You'll draw three things — a <strong>house</strong>, a <strong>tree</strong>, then a <strong>person</strong> — each on their own screen. Don't overthink it. Then the AI gives you a personality reading and your Myers-Briggs type. Do it with someone else for a compatibility reading.</p>
     </div>
-  </div>
-</div>
-
-<!-- LOBBY -->
-<div class="screen hidden" id="lobby">
-  <div class="topbar">
-    <button class="btn btn-ghost btn-sm" onclick="showScreen('home')" style="width:auto">‹ Back</button>
-    <div class="logo" style="font-size:1rem">Compatibility</div>
-    <div style="width:60px"></div>
-  </div>
-  <div style="flex:1;overflow-y:auto;display:flex;align-items:center;justify-content:center;padding:1.5rem">
-    <div class="lobby-inner">
-      <div id="lobbyCreate">
-        <div class="eyebrow">Start a session</div>
-        <h2>Draw together</h2>
-        <p>Create a session and share the code. Draw on your own device, then compare.</p>
-        <button class="btn btn-primary" style="margin-top:1rem" onclick="createSession()">Create Session</button>
-        <div style="margin:1.25rem 0;display:flex;align-items:center;gap:10px"><div style="flex:1;height:0.5px;background:var(--border-2)"></div><span style="font-size:.75rem;color:var(--ink-3)">or join one</span><div style="flex:1;height:0.5px;background:var(--border-2)"></div></div>
-        <input class="join-input" id="joinCode" placeholder="ENTER CODE" maxlength="6" oninput="this.value=this.value.toUpperCase()">
-        <button class="btn btn-secondary" onclick="joinSession()">Join Session</button>
-      </div>
-      <div id="lobbyWaiting" class="hidden">
-        <div class="eyebrow">Session code</div>
-        <div class="code-display" id="sessionCodeDisplay"></div>
-        <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.5rem">Share this code with the other person</p>
-        <button class="btn btn-secondary btn-sm" style="margin-bottom:1rem" onclick="shareCode()">Share Code ↗</button>
-        <div class="lobby-status">
-          <div class="status-dot"><div class="dot on" id="dotA"></div><span id="labelA">You (drawing)</span></div>
-          <div class="status-dot"><div class="dot" id="dotB"></div><span id="labelB">Them (waiting)</span></div>
-        </div>
-        <button class="btn btn-primary" style="margin-top:1rem" onclick="goDrawSession('a')" id="drawNowBtn">Start Drawing</button>
-      </div>
+    <div class="home-actions">
+      <button class="big-btn btn-solo" onclick="startSolo()">
+        <div class="btn-icon">🖊️</div>
+        <div class="btn-label"><strong>Solo Reading</strong><span>Draw & get your MBTI + personality analysis</span></div>
+        <div class="btn-arrow">›</div>
+      </button>
+      <button class="big-btn btn-session" onclick="goLobby()">
+        <div class="btn-icon">🍸</div>
+        <div class="btn-label"><strong>Draw with Someone</strong><span>Share a link — each draw on your own phone</span></div>
+        <div class="btn-arrow">›</div>
+      </button>
     </div>
   </div>
 </div>
 
 <!-- DRAW -->
 <div class="screen hidden" id="draw">
-  <div class="draw-topbar">
-    <button class="tb-btn" onclick="goBack()" style="min-width:36px;height:36px;font-size:13px">‹</button>
-    <div class="draw-title" id="drawTitle">Draw your house, tree &amp; person</div>
-    <button class="tb-btn" onclick="undoCanvas()" style="min-width:36px;height:36px;font-size:13px">↩</button>
+  <div class="draw-header">
+    <button class="tb-btn" onclick="drawBack()" style="width:32px;height:32px;font-size:12px;flex-shrink:0">‹</button>
+    <div class="step-label" id="stepLabel">Draw your house</div>
+    <button class="tb-btn" onclick="undoCanvas()" style="width:32px;height:32px;font-size:13px;flex-shrink:0">↩</button>
   </div>
-  <canvas id="c"></canvas>
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" id="ps0"></div>
+    <div class="progress-step" id="ps1"></div>
+    <div class="progress-step" id="ps2"></div>
+  </div>
+  <div class="step-hint" id="stepHint">Draw anything that feels right — no artistic talent required!</div>
+
+  <!-- Upload zone (shown when canvas is empty) -->
+  <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
+    <div class="uz-icon">📷</div>
+    <p>Or tap to upload a photo of your drawing</p>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleUpload(event)">
+
+  <canvas id="c" class="hidden"></canvas>
+
   <div class="toolbar">
-    <button class="tb-btn active" id="penBtn" onclick="setTool('pen')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    </button>
-    <button class="tb-btn" id="eraserBtn" onclick="setTool('eraser')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l11-11 6 6-2.5 2.5"/></svg>
-    </button>
-    <div class="color-row">
-      <div class="cdot active" style="background:#1a1410" onclick="setColor('#1a1410',this)"></div>
-      <div class="cdot" style="background:#c4572a" onclick="setColor('#c4572a',this)"></div>
-      <div class="cdot" style="background:#4a7060" onclick="setColor('#4a7060',this)"></div>
-      <div class="cdot" style="background:#c9952a" onclick="setColor('#c9952a',this)"></div>
-      <div class="cdot" style="background:#6b4c8a" onclick="setColor('#6b4c8a',this)"></div>
+    <div class="tb-group">
+      <button class="tb-btn active" id="penBtn" onclick="setTool('pen')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
+      <button class="tb-btn" id="eraserBtn" onclick="setTool('eraser')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 20H7L3 16l11-11 6 6-2.5 2.5"/></svg>
+      </button>
     </div>
-    <div class="size-wrap">
-      <input type="range" class="size-slider" min="1" max="24" value="3" id="brushSize" oninput="brushSz=+this.value">
-      <div class="pressure-badge" id="pressureBadge">pressure: –</div>
+    <div class="tb-group">
+      <div class="cdot active" style="background:#1c1410" onclick="setColor('#1c1410',this)"></div>
+      <div class="cdot" style="background:#b8441e" onclick="setColor('#b8441e',this)"></div>
+      <div class="cdot" style="background:#3d6652" onclick="setColor('#3d6652',this)"></div>
+      <div class="cdot" style="background:#2a4a7a" onclick="setColor('#2a4a7a',this)"></div>
+      <div class="cdot" style="background:#b8820a" onclick="setColor('#b8820a',this)"></div>
     </div>
-    <button class="tb-btn" onclick="clearCanvas()" style="font-size:11px;font-weight:500">CLR</button>
-    <button class="tb-btn btn-primary" style="background:var(--accent);color:#fff;border-color:var(--accent);padding:0 12px;min-width:auto;font-size:12px;font-weight:500" onclick="submitDrawing()">Done ›</button>
+    <input type="range" class="size-slider" min="1" max="22" value="3" id="brushSize" oninput="brushSz=+this.value">
+    <button class="next-btn" id="nextBtn" onclick="nextStep()">Next →</button>
   </div>
 </div>
 
-<!-- WAITING FOR OTHER PERSON -->
+<!-- LOBBY -->
+<div class="screen hidden" id="lobby">
+  <div class="topbar">
+    <button class="btn btn-g" onclick="showScreen('home')" style="width:auto;padding:6px 10px">‹ Back</button>
+    <div class="logo" style="font-size:1.1rem">Draw Together</div>
+    <div style="width:70px"></div>
+  </div>
+  <div class="lobby-body">
+    <div id="lobbyCreate" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+      <div class="napkin" style="margin:0;width:100%;text-align:left">
+        <div class="napkin-title">🍸 Bar Rules</div>
+        <p>One of you creates a session and shares the code. You each draw on your own phone — house, tree, person. When both are done, the AI tells you how compatible you are.</p>
+      </div>
+      <button class="btn btn-p" onclick="createSession()" style="margin-top:.25rem">Create Session</button>
+      <div style="display:flex;align-items:center;gap:8px;width:100%"><div style="flex:1;height:1px;background:var(--border-2)"></div><span style="font-size:.72rem;color:var(--ink-3)">or join one</span><div style="flex:1;height:1px;background:var(--border-2)"></div></div>
+      <input class="join-input" id="joinCode" placeholder="ABC123" maxlength="6" oninput="this.value=this.value.toUpperCase()">
+      <button class="btn btn-s" onclick="joinSession()">Join Session</button>
+    </div>
+    <div id="lobbyWaiting" class="hidden" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <p style="font-size:.78rem;color:var(--ink-3)">Session code</p>
+      <div class="code-big" id="codeDisplay"></div>
+      <button class="btn btn-s" style="max-width:200px" onclick="shareSessionCode()">Share Code ↗</button>
+      <div class="status-row">
+        <div class="sdot"><div class="sdot-circle on"></div><span id="slabelA">You</span></div>
+        <div class="sdot"><div class="sdot-circle" id="sdotB"></div><span id="slabelB">Them (waiting)</span></div>
+      </div>
+      <button class="btn btn-p" onclick="startSessionDraw()">Start Drawing →</button>
+    </div>
+  </div>
+</div>
+
+<!-- WAITING -->
 <div class="screen hidden" id="waiting">
-  <div class="draw-topbar">
-    <div class="draw-title">Waiting for other person…</div>
-  </div>
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;text-align:center">
+  <div class="topbar"><div class="logo">Waiting…</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;text-align:center;padding:2rem">
     <div class="spinner"></div>
-    <h2 style="font-family:'DM Serif Display',serif;font-size:1.4rem">Drawing submitted ✓</h2>
-    <p style="font-size:.85rem;color:var(--ink-2);font-weight:300">Waiting for the other person to finish their drawing…</p>
-    <div class="poll-status" id="pollStatus">Checking every 3 seconds</div>
-    <button class="btn btn-secondary" style="margin-top:.5rem" onclick="checkAndAnalyze(true)">Check now</button>
+    <div style="font-family:'Caveat',cursive;font-size:1.8rem;font-weight:700">Drawing submitted ✓</div>
+    <p style="font-size:.82rem;color:var(--ink-2);font-weight:300;max-width:260px">Waiting for the other person to finish their drawings…</p>
+    <p class="dots" style="margin-top:.5rem"><span></span><span></span><span></span></p>
+    <button class="btn btn-s" style="margin-top:.5rem;max-width:200px" onclick="checkAndAnalyze(true)">Check now</button>
   </div>
-</div>
-
-<!-- RESULTS -->
-<div class="screen hidden" id="results">
-  <div class="draw-topbar">
-    <button class="tb-btn" onclick="showScreen('home')" style="min-width:36px;height:36px;font-size:13px">⌂</button>
-    <div class="draw-title">Compatibility Report</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="results-inner" id="resultsInner"></div>
-  <button class="share-btn" onclick="shareResults()" title="Share">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-  </button>
 </div>
 
 <!-- ANALYSIS (solo) -->
 <div class="screen hidden" id="analysis">
-  <div class="draw-topbar">
-    <button class="tb-btn" onclick="showScreen('home')" style="min-width:36px;height:36px;font-size:13px">⌂</button>
-    <div class="draw-title">Your Reading</div>
-    <div style="width:36px"></div>
+  <div class="topbar">
+    <button class="tb-btn" onclick="showScreen('home')" style="width:34px;height:34px;font-size:16px">⌂</button>
+    <div class="logo" style="font-size:1.1rem">Your Reading</div>
+    <div style="width:34px"></div>
   </div>
-  <div class="analysis-inner" id="analysisInner">
-    <div class="dots" style="margin-top:3rem"><span></span><span></span><span></span></div>
-    <p style="text-align:center;font-size:.85rem;color:var(--ink-3);margin-top:1rem">Reading your marks…</p>
+  <div class="analysis-body" id="analysisBody">
+    <div style="text-align:center;padding-top:3rem">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p style="margin-top:1rem;font-size:.82rem;color:var(--ink-3)">Reading your drawings…</p>
+    </div>
   </div>
 </div>
 
+<!-- RESULTS (compat) -->
+<div class="screen hidden" id="results">
+  <div class="topbar">
+    <button class="tb-btn" onclick="showScreen('home')" style="width:34px;height:34px;font-size:16px">⌂</button>
+    <div class="logo" style="font-size:1.1rem">Compatibility</div>
+    <div style="width:34px"></div>
+  </div>
+  <div class="results-body" id="resultsBody"></div>
+  <button class="share-fab" onclick="shareResults()">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  </button>
+</div>
+
 <script>
-// ── STATE ──────────────────────────────────────────────────────
-let tool='pen', drawColor='#1a1410', brushSz=3;
-let drawing=false, lastX=0, lastY=0;
-let history=[], historyLimit=30;
-let sessionCode='', sessionSlot='a', sessionName='';
-let drawMode='solo'; // 'solo' or 'session'
-let pressureReadings=[], peakPressure=0;
-let pollTimer=null;
-const scoreColors={openness:'#6b4c8a',structure:'#4a7060',energy:'#c4572a',social:'#c9952a',creativity:'#2a5a8a'};
+// ── STATE ────────────────────────────────────────────────────────
+const STEPS = [
+  { label:'Draw your house 🏠', hint:'Think about home — safety, family, your idea of shelter. Any style.', emoji:'🏠', title:'House', desc:'Draw any house that feels right. Big, small, fancy, falling apart — whatever comes first.' },
+  { label:'Draw a tree 🌳', hint:'Just a tree. It can be bare, lush, old, young — whatever you like.', emoji:'🌳', title:'Tree', desc:'Your turn to draw a tree. Doesn't have to be pretty.' },
+  { label:'Draw a person 🧍', hint:'Draw a whole person — any person. Stick figure is totally fine.', emoji:'🧍', title:'Person', desc:'Last one. Draw a person — could be you, could be anyone.' }
+];
 
-// ── CANVAS ──────────────────────────────────────────────────────
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
-ctx.lineCap='round';ctx.lineJoin='round';
+let step = 0;
+let drawings = []; // base64 jpeg per step
+let uploadedThisStep = false;
+let tool = 'pen', drawColor = '#1c1410', brushSz = 3;
+let drawing = false, lx = 0, ly = 0;
+let history = [], hasDrawnThisStep = false;
+let pressureReadings = [], peakPressure = 0;
+let drawMode = 'solo';
+let sessionCode = '', sessionSlot = 'a', sessionName = '';
+let pollTimer = null;
+const SC = {openness:'#6b4c8a',structure:'#3d6652',energy:'#b8441e',social:'#b8820a',creativity:'#2a4a7a'};
 
-function resizeCanvas(){
-  const dpr=window.devicePixelRatio||1;
-  const rect=canvas.getBoundingClientRect();
-  canvas.width=rect.width*dpr;
-  canvas.height=rect.height*dpr;
-  ctx.scale(dpr,dpr);
-  ctx.lineCap='round';ctx.lineJoin='round';
-  if(history.length){
-    const img=new Image();img.src=history[history.length-1];
-    img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);
-  }
+// ── CANVAS ───────────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+  ctx.scale(dpr, dpr); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if (history.length) { const img = new Image(); img.src = history[history.length-1]; img.onload = () => { const r2=canvas.getBoundingClientRect(); ctx.drawImage(img,0,0,r2.width,r2.height); }; }
 }
 
-function getPos(e){
-  const r=canvas.getBoundingClientRect();
-  const dpr=window.devicePixelRatio||1;
-  const src=e.touches?e.touches[0]:e;
-  return{x:(src.clientX-r.left),y:(src.clientY-r.top)};
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - r.left, y: src.clientY - r.top };
 }
 
-function getPressure(e){
-  if(e.touches&&e.touches[0]){
-    const f=e.touches[0].force;
-    if(f>0){
-      pressureReadings.push(f);
-      if(f>peakPressure)peakPressure=f;
-      document.getElementById('pressureBadge').textContent='pressure: '+(f*100).toFixed(0)+'%';
-      return f;
-    }
+function grabPressure(e) {
+  if (e.touches && e.touches[0] && e.touches[0].force > 0) {
+    const f = e.touches[0].force;
+    pressureReadings.push(f);
+    if (f > peakPressure) peakPressure = f;
+    return f;
   }
   return null;
 }
 
-function startDraw(e){
+function startDraw(e) {
   e.preventDefault();
-  drawing=true;
-  const p=getPos(e);lastX=p.x;lastY=p.y;
-  const pressure=getPressure(e);
-  const sz=tool==='eraser'?brushSz*4:brushSz;
-  ctx.beginPath();ctx.arc(lastX,lastY,sz/2,0,Math.PI*2);
-  ctx.fillStyle=tool==='eraser'?'#fff':drawColor;ctx.fill();
+  if (!hasDrawnThisStep) { showCanvas(); }
+  drawing = true;
+  const p = getPos(e); lx = p.x; ly = p.y; grabPressure(e);
+  ctx.beginPath(); ctx.arc(lx, ly, (tool==='eraser'?brushSz*3.5:brushSz)/2, 0, Math.PI*2);
+  ctx.fillStyle = tool==='eraser'?'#fff':drawColor; ctx.fill();
 }
-function draw(e){
-  if(!drawing)return;e.preventDefault();
-  const p=getPos(e);
-  const pressure=getPressure(e);
-  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);
-  ctx.strokeStyle=tool==='eraser'?'#fff':drawColor;
-  ctx.lineWidth=tool==='eraser'?brushSz*4:brushSz;
-  ctx.stroke();lastX=p.x;lastY=p.y;
+function drawMove(e) {
+  if (!drawing) return; e.preventDefault(); grabPressure(e);
+  const p = getPos(e);
+  ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y);
+  ctx.strokeStyle = tool==='eraser'?'#fff':drawColor;
+  ctx.lineWidth = tool==='eraser'?brushSz*3.5:brushSz; ctx.stroke();
+  lx = p.x; ly = p.y;
 }
-function stopDraw(){
-  if(drawing){drawing=false;saveState();}
+function stopDraw() { if (drawing) { drawing = false; hasDrawnThisStep = true; saveState(); } }
+
+canvas.addEventListener('touchstart', startDraw, {passive:false});
+canvas.addEventListener('touchmove', drawMove, {passive:false});
+canvas.addEventListener('touchend', stopDraw);
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', drawMove);
+canvas.addEventListener('mouseup', stopDraw);
+canvas.addEventListener('mouseleave', stopDraw);
+
+function saveState() {
+  const r = canvas.getBoundingClientRect();
+  const off = document.createElement('canvas'); off.width=r.width; off.height=r.height;
+  off.getContext('2d').drawImage(canvas,0,0,canvas.width,canvas.height,0,0,r.width,r.height);
+  history.push(off.toDataURL('image/jpeg',.82));
+  if (history.length > 25) history.shift();
+}
+function undoCanvas() {
+  if (history.length < 2) return; history.pop();
+  const img = new Image(); const r = canvas.getBoundingClientRect();
+  img.src = history[history.length-1]; img.onload = () => { ctx.clearRect(0,0,r.width,r.height); ctx.drawImage(img,0,0,r.width,r.height); };
+}
+function setTool(t) { tool=t; document.getElementById('penBtn').classList.toggle('active',t==='pen'); document.getElementById('eraserBtn').classList.toggle('active',t==='eraser'); }
+function setColor(c, el) { drawColor=c; document.querySelectorAll('.cdot').forEach(d=>d.classList.remove('active')); el.classList.add('active'); setTool('pen'); }
+
+function showCanvas() {
+  document.getElementById('uploadZone').classList.add('hidden');
+  canvas.classList.remove('hidden');
+  hasDrawnThisStep = true;
+  setTimeout(resizeCanvas, 50);
 }
 
-canvas.addEventListener('touchstart',startDraw,{passive:false});
-canvas.addEventListener('touchmove',draw,{passive:false});
-canvas.addEventListener('touchend',stopDraw);
-canvas.addEventListener('mousedown',startDraw);
-canvas.addEventListener('mousemove',draw);
-canvas.addEventListener('mouseup',stopDraw);
-canvas.addEventListener('mouseleave',stopDraw);
-
-function saveState(){
-  const r=canvas.getBoundingClientRect();
-  const offscreen=document.createElement('canvas');
-  offscreen.width=r.width;offscreen.height=r.height;
-  offscreen.getContext('2d').drawImage(canvas,0,0,canvas.width,canvas.height,0,0,r.width,r.height);
-  history.push(offscreen.toDataURL('image/jpeg',.8));
-  if(history.length>historyLimit)history.shift();
+// ── SCREENS ──────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('hidden', s.id !== id));
 }
 
-function undoCanvas(){
-  if(history.length<2)return;
-  history.pop();
-  const img=new Image();
-  const r=canvas.getBoundingClientRect();
-  img.src=history[history.length-1];
-  img.onload=()=>{ctx.clearRect(0,0,r.width,r.height);ctx.drawImage(img,0,0,r.width,r.height);}
-}
-
-function clearCanvas(){
-  const r=canvas.getBoundingClientRect();
-  ctx.clearRect(0,0,r.width,r.height);
-  saveState();
-}
-
-function setTool(t){
-  tool=t;
-  document.getElementById('penBtn').classList.toggle('active',t==='pen');
-  document.getElementById('eraserBtn').classList.toggle('active',t==='eraser');
-}
-function setColor(c,el){
-  drawColor=c;
-  document.querySelectorAll('.cdot').forEach(d=>d.classList.remove('active'));
-  el.classList.add('active');setTool('pen');
-}
-
-// ── SCREENS ─────────────────────────────────────────────────────
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.toggle('hidden',s.id!==id);
-  });
-  if(id==='draw'){
-    setTimeout(()=>{resizeCanvas();if(!history.length)saveState();},50);
+// ── STEP MANAGEMENT ──────────────────────────────────────────────
+function initStep(s) {
+  step = s; hasDrawnThisStep = false; history = []; uploadedThisStep = false;
+  document.getElementById('stepLabel').textContent = STEPS[s].label;
+  document.getElementById('stepHint').textContent = STEPS[s].hint;
+  document.getElementById('nextBtn').textContent = s < 2 ? 'Next →' : 'Done ✓';
+  for (let i=0;i<3;i++) {
+    const el = document.getElementById('ps'+i);
+    el.className = 'progress-step' + (i<s?' done':i===s?' active':'');
   }
+  // reset canvas
+  canvas.classList.add('hidden');
+  document.getElementById('uploadZone').classList.remove('hidden');
+  setTimeout(() => { ctx.clearRect(0,0,canvas.width,canvas.height); }, 10);
 }
 
-// ── HOME ACTIONS ─────────────────────────────────────────────────
-function startSolo(){
-  drawMode='solo';
-  pressureReadings=[];peakPressure=0;
-  history=[];
-  document.getElementById('drawTitle').textContent='Draw your house, tree & person';
-  showScreen('draw');
+function startSolo() {
+  drawMode = 'solo'; drawings = []; pressureReadings = []; peakPressure = 0;
+  showScreen('draw'); initStep(0);
 }
 
-// ── SESSION LOBBY ─────────────────────────────────────────────────
-function setupLobby(){
-  document.getElementById('lobbyCreate').classList.remove('hidden');
-  document.getElementById('lobbyWaiting').classList.add('hidden');
+function drawBack() {
+  if (step > 0) { showTransition(step - 1, true); }
+  else { showScreen('home'); }
 }
 
-async function createSession(){
-  const res=await fetch('/api/session/create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
-  const data=await res.json();
-  sessionCode=data.code;
-  sessionSlot='a';
-  sessionName=prompt('Your name (optional):','Person A')||'Person A';
-  document.getElementById('sessionCodeDisplay').textContent=sessionCode;
-  document.getElementById('lobbyCreate').classList.add('hidden');
-  document.getElementById('lobbyWaiting').classList.remove('hidden');
-  pollSessionStatus();
-}
-
-async function joinSession(){
-  const code=document.getElementById('joinCode').value.trim().toUpperCase();
-  if(code.length!==6){alert('Enter a 6-character code');return;}
-  const res=await fetch('/api/session/'+code);
-  if(!res.ok){alert('Session not found. Check the code and try again.');return;}
-  sessionCode=code;
-  sessionSlot='b';
-  sessionName=prompt('Your name (optional):','Person B')||'Person B';
-  drawMode='session';
-  pressureReadings=[];peakPressure=0;history=[];
-  document.getElementById('drawTitle').textContent='Draw your house, tree & person';
-  showScreen('draw');
-}
-
-function goDrawSession(slot){
-  drawMode='session';
-  pressureReadings=[];peakPressure=0;history=[];
-  document.getElementById('drawTitle').textContent='Draw your house, tree & person';
-  showScreen('draw');
-}
-
-async function pollSessionStatus(){
-  if(!sessionCode)return;
-  try{
-    const res=await fetch('/api/session/'+sessionCode);
-    const data=await res.json();
-    document.getElementById('dotB').classList.toggle('on',data.hasB);
-    document.getElementById('labelB').textContent=data.hasB?'Them (done ✓)':'Them (waiting)';
-  }catch(e){}
-}
-
-function shareCode(){
-  const url=window.location.origin+'?join='+sessionCode;
-  if(navigator.share){
-    navigator.share({title:'Join my PsycheDraw session',text:'Draw with me! Code: '+sessionCode,url});
+function nextStep() {
+  if (!hasDrawnThisStep && !uploadedThisStep) {
+    if (!confirm('Draw something first — even a quick sketch counts. Skip this step?')) return;
+  }
+  // capture current drawing
+  if (uploadedThisStep && drawings[step]) {
+    // already saved from upload
   } else {
-    navigator.clipboard.writeText(url).then(()=>alert('Link copied: '+url));
+    const r = canvas.getBoundingClientRect();
+    const off = document.createElement('canvas'); off.width=r.width*2; off.height=r.height*2;
+    const ox = off.getContext('2d'); ox.fillStyle='#fff'; ox.fillRect(0,0,off.width,off.height);
+    if (hasDrawnThisStep) ox.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,off.width,off.height);
+    drawings[step] = off.toDataURL('image/jpeg',.85).split(',')[1];
   }
+
+  if (step < 2) { showTransition(step + 1, false); }
+  else { submitAll(); }
 }
 
-function goBack(){
-  if(drawMode==='session'){showScreen('lobby');}
-  else{showScreen('home');}
+// ── TRANSITIONS ──────────────────────────────────────────────────
+let transitionTarget = 0;
+function showTransition(nextStep_, goingBack) {
+  transitionTarget = nextStep_;
+  const s = STEPS[nextStep_];
+  document.getElementById('transEmoji').textContent = s.emoji;
+  document.getElementById('transTitle').textContent = (goingBack ? '← ' : '') + s.title;
+  document.getElementById('transDesc').textContent = s.desc;
+  document.getElementById('stepTransition').classList.add('show');
+}
+function dismissTransition() {
+  document.getElementById('stepTransition').classList.remove('show');
+  initStep(transitionTarget);
 }
 
-// ── SUBMIT DRAWING ────────────────────────────────────────────────
-async function submitDrawing(){
-  const r=canvas.getBoundingClientRect();
-  const offscreen=document.createElement('canvas');
-  offscreen.width=r.width*2;offscreen.height=r.height*2;
-  const ox=offscreen.getContext('2d');
-  ox.fillStyle='#fff';ox.fillRect(0,0,offscreen.width,offscreen.height);
-  ox.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,offscreen.width,offscreen.height);
-  const imageData=offscreen.toDataURL('image/jpeg',.85).split(',')[1];
+// ── UPLOAD ───────────────────────────────────────────────────────
+function triggerUpload() { document.getElementById('fileInput').click(); }
+function handleUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image(); img.onload = () => {
+      showCanvas();
+      setTimeout(() => {
+        const r = canvas.getBoundingClientRect();
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, r.width, r.height);
+        const scale = Math.min(r.width/img.width, r.height/img.height);
+        const w = img.width*scale, h = img.height*scale;
+        ctx.drawImage(img, (r.width-w)/2, (r.height-h)/2, w, h);
+        hasDrawnThisStep = true; uploadedThisStep = true; saveState();
+        // pre-save for this step
+        const off = document.createElement('canvas'); off.width=r.width*2; off.height=r.height*2;
+        const ox = off.getContext('2d'); ox.fillStyle='#fff'; ox.fillRect(0,0,off.width,off.height);
+        ox.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,off.width,off.height);
+        drawings[step] = off.toDataURL('image/jpeg',.85).split(',')[1];
+      }, 80);
+    }; img.src = ev.target.result;
+  }; reader.readAsDataURL(file);
+  e.target.value = '';
+}
 
-  const pressureData=pressureReadings.length>0?{
-    avg:pressureReadings.reduce((a,b)=>a+b,0)/pressureReadings.length,
-    peak:peakPressure,
-    lightPct:Math.round(pressureReadings.filter(p=>p<0.3).length/pressureReadings.length*100)
-  }:null;
+// ── SUBMIT ───────────────────────────────────────────────────────
+async function submitAll() {
+  const pressureData = pressureReadings.length > 0 ? {
+    avg: pressureReadings.reduce((a,b)=>a+b,0)/pressureReadings.length,
+    peak: peakPressure,
+    lightPct: Math.round(pressureReadings.filter(p=>p<0.3).length/pressureReadings.length*100)
+  } : null;
 
-  if(drawMode==='solo'){
+  if (drawMode === 'solo') {
     showScreen('analysis');
-    document.getElementById('analysisInner').innerHTML='<div class="dots" style="margin-top:3rem"><span></span><span></span><span></span></div><p style="text-align:center;font-size:.85rem;color:var(--ink-3);margin-top:1rem">Reading your marks…</p>';
-    try{
-      const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageData,subject:'all',pressureData})});
-      const data=await res.json();
-      if(!res.ok)throw new Error(data.error);
+    document.getElementById('analysisBody').innerHTML = '<div style="text-align:center;padding-top:3rem"><div class="dots"><span></span><span></span><span></span></div><p style="margin-top:1rem;font-size:.82rem;color:var(--ink-3)">Reading your drawings…</p></div>';
+    try {
+      const res = await fetch('/api/analyze', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ images: drawings, pressureData }) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
       renderSoloAnalysis(data);
-    }catch(err){
-      document.getElementById('analysisInner').innerHTML='<p style="color:var(--accent);padding:2rem;text-align:center">'+err.message+'</p>';
+    } catch(err) {
+      document.getElementById('analysisBody').innerHTML = '<p style="color:var(--accent);padding:2rem;text-align:center">'+err.message+'</p>';
     }
     return;
   }
 
-  // Session mode
-  try{
-    await fetch('/api/session/'+sessionCode+'/submit',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({slot:sessionSlot,imageData,name:sessionName,pressureData})
+  // session
+  try {
+    await fetch('/api/session/'+sessionCode+'/submit', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ slot:sessionSlot, images:drawings, name:sessionName, pressureData })
     });
     showScreen('waiting');
     startPolling();
-  }catch(err){alert('Submit failed: '+err.message);}
+  } catch(err) { alert('Submit failed: '+err.message); }
 }
 
-// ── POLLING ────────────────────────────────────────────────────────
-function startPolling(){
-  if(pollTimer)clearInterval(pollTimer);
-  let count=0;
-  pollTimer=setInterval(()=>{
-    count++;
-    document.getElementById('pollStatus').textContent='Checked '+count+' time'+(count!==1?'s':'');
-    checkAndAnalyze(false);
-  },3000);
+// ── LOBBY / SESSION ──────────────────────────────────────────────
+function goLobby() {
+  document.getElementById('lobbyCreate').classList.remove('hidden');
+  document.getElementById('lobbyWaiting').classList.add('hidden');
+  showScreen('lobby');
 }
 
-async function checkAndAnalyze(force){
-  try{
-    const res=await fetch('/api/session/'+sessionCode);
-    const data=await res.json();
-    if(data.hasA&&data.hasB){
-      if(pollTimer)clearInterval(pollTimer);
-      // trigger analysis
-      const aRes=await fetch('/api/session/'+sessionCode+'/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
-      const result=await aRes.json();
-      if(!aRes.ok)throw new Error(result.error);
-      renderCompatResults(result,data.nameA,data.nameB);
+async function createSession() {
+  const res = await fetch('/api/session/create', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+  const data = await res.json();
+  sessionCode = data.code; sessionSlot = 'a';
+  sessionName = prompt('Your name:', 'Person A') || 'Person A';
+  document.getElementById('codeDisplay').textContent = sessionCode;
+  document.getElementById('lobbyCreate').classList.add('hidden');
+  document.getElementById('lobbyWaiting').classList.remove('hidden');
+}
+
+async function joinSession() {
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+  if (code.length !== 6) { alert('Enter the 6-character code'); return; }
+  const res = await fetch('/api/session/'+code);
+  if (!res.ok) { alert('Session not found — check the code'); return; }
+  sessionCode = code; sessionSlot = 'b';
+  sessionName = prompt('Your name:', 'Person B') || 'Person B';
+  drawMode = 'session'; drawings = []; pressureReadings = []; peakPressure = 0;
+  showScreen('draw'); initStep(0);
+}
+
+function startSessionDraw() {
+  drawMode = 'session'; drawings = []; pressureReadings = []; peakPressure = 0;
+  showScreen('draw'); initStep(0);
+}
+
+function shareSessionCode() {
+  const url = window.location.origin + '?join=' + sessionCode;
+  if (navigator.share) navigator.share({title:'Join my PsycheDraw session', text:'Draw with me! Code: '+sessionCode, url});
+  else navigator.clipboard.writeText(url).then(() => alert('Link copied!'));
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(() => checkAndAnalyze(false), 3500);
+}
+
+async function checkAndAnalyze(force) {
+  try {
+    const res = await fetch('/api/session/'+sessionCode);
+    const data = await res.json();
+    if (data.hasA && data.hasB) {
+      if (pollTimer) clearInterval(pollTimer);
+      const aRes = await fetch('/api/session/'+sessionCode+'/analyze', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+      const result = await aRes.json();
+      if (!aRes.ok) throw new Error(result.error);
+      renderCompatResults(result, data.nameA, data.nameB);
       showScreen('results');
-    }else if(force){
-      alert('Still waiting for the other person to finish drawing.');
-    }
-  }catch(err){
-    if(force)alert('Error: '+err.message);
-  }
+    } else if (force) alert('Still waiting for the other person to finish.');
+  } catch(err) { if (force) alert('Error: '+err.message); }
 }
 
-// ── RENDER SOLO ───────────────────────────────────────────────────
-function renderSoloAnalysis(d){
-  const scoresHtml=Object.entries(d.scores||{}).map(([k,v])=>`
-    <div class="score-row">
-      <span class="score-label">${k.charAt(0).toUpperCase()+k.slice(1)}</span>
-      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${v}%;background:${scoreColors[k]||'#c4572a'}"></div></div>
-      <span class="score-val">${v}</span>
-    </div>`).join('');
-  const elements=['house','tree','person'].filter(k=>d[k]).map(k=>`
-    <div style="margin-bottom:.75rem"><div class="section-label">${k}</div><div style="font-size:.82rem;color:var(--ink-2);font-weight:300;line-height:1.55">${d[k]}</div></div>`).join('');
-  const pills=(d.traits||[]).map((t,i)=>`<span class="pill ${['warm','cool','neutral'][i%3]}">${t}</span>`).join('');
-
-  document.getElementById('analysisInner').innerHTML=`<div class="fade">
-    <div class="card">
-      <div class="section-label">Overall impression</div>
-      <p style="font-size:.85rem;color:var(--ink-2);font-weight:300;line-height:1.55">${d.overview||''}</p>
-    </div>
-    <div class="card">
-      <div class="section-label">Key traits</div>
-      <div class="pills">${pills}</div>
-    </div>
-    ${elements?'<div class="card">'+elements+'</div>':''}
-    <div class="card">
-      <div class="section-label">Dimension scores</div>
-      ${scoresHtml}
-    </div>
-    ${d.shadow?'<div class="shadow-note">'+d.shadow+'</div>':''}
-  </div>`;
+function shareResults() {
+  if (navigator.share) navigator.share({title:'My PsycheDraw Reading', text:'Check this out!', url: window.location.href});
+  else navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
 }
 
-// ── RENDER COMPAT ──────────────────────────────────────────────────
-function renderCompatResults(d,nameA,nameB){
-  function pCard(p,name){
-    const pills=(p.traits||[]).map((t,i)=>`<span class="pill ${['warm','cool','neutral'][i%3]}">${t}</span>`).join('');
-    const scores=['openness','structure','energy','social','creativity'].map(k=>{
-      const v=(p.scores||{})[k]||50;
-      return`<div class="score-row"><span class="score-label">${k}</span><div class="score-bar-wrap"><div class="score-bar-fill" style="width:${v}%;background:${scoreColors[k]}"></div></div><span class="score-val">${v}</span></div>`;
-    }).join('');
-    return`<div class="card"><div class="person-header">${name}</div><div class="person-summary">${p.summary||''}</div><div class="pills">${pills}</div>${scores}</div>`;
-  }
-  const score=d.compatScore||72;
-  const scoreColor=score>=75?'var(--sage)':score>=50?'var(--gold)':'var(--accent)';
-  document.getElementById('resultsInner').innerHTML=`<div class="fade">
-    <div class="result-hero">
-      <div class="compat-num" style="color:${scoreColor}">${score}</div>
-      <div class="compat-label">${d.compatLabel||'Compatibility'}</div>
-      ${d.chemistryNote?`<div class="chemistry">"${d.chemistryNote}"</div>`:''}
-    </div>
-    <div class="two-col">${pCard(d.personA||{},nameA||'Person A')}${pCard(d.personB||{},nameB||'Person B')}</div>
-    <div class="two-col">
-      <div class="card"><div class="section-label">Shared strengths</div><p style="font-size:.8rem;color:var(--ink-2);font-weight:300;line-height:1.5">${d.sharedStrengths||''}</p></div>
-      <div class="card"><div class="section-label">Growth edges</div><p style="font-size:.8rem;color:var(--ink-2);font-weight:300;line-height:1.5">${d.growthEdges||''}</p></div>
-    </div>
-  </div>`;
+// ── RENDER SOLO ──────────────────────────────────────────────────
+function renderSoloAnalysis(d) {
+  const m = d.mbti || {};
+  const pills = (d.traits||[]).map((t,i)=>'<span class="pill '+['warm','cool','neu'][i%3]+'">'+t+'</span>').join('');
+  const scoresHtml = Object.entries(d.scores||{}).map(([k,v])=>
+    '<div class="srow"><span class="slbl">'+k.charAt(0).toUpperCase()+k.slice(1)+'</span><div class="sbar"><div class="sfill" style="width:'+v+'%;background:'+(SC[k]||'#b8441e')+'"></div></div><span class="sval">'+v+'</span></div>'
+  ).join('');
+  const mbtiHtml = m.type ? mbtiCard(m) : '';
+  const elemHtml = ['house','tree','person'].filter(k=>d[k]).map(k=>
+    '<div class="result-card"><div class="rlabel">'+k+'</div><p>'+d[k]+'</p></div>'
+  ).join('');
+
+  document.getElementById('analysisBody').innerHTML =
+    '<div class="result-card"><div class="rlabel">Overall</div><p>'+( d.overview||'')+'</p><div class="pills" style="margin-top:8px">'+pills+'</div></div>'+
+    mbtiHtml+
+    elemHtml+
+    '<div class="result-card"><div class="rlabel">Dimensions</div><div class="scores-grid">'+scoresHtml+'</div></div>'+
+    (d.shadow?'<div class="result-card" style="border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><div class="rlabel">Shadow note</div><p style="font-style:italic">'+d.shadow+'</p></div>':'');
 }
 
-// ── SHARE ──────────────────────────────────────────────────────────
-function shareResults(){
-  if(navigator.share){
-    navigator.share({title:'My PsycheDraw Compatibility',text:'Check out our compatibility reading on PsycheDraw!',url:window.location.href});
-  } else {
-    navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'));
-  }
+function mbtiCard(m) {
+  const bars = [
+    {left:'I',right:'E',val:m.ei,color:'#6b4c8a',label:m.eiLabel},
+    {left:'S',right:'N',val:m.sn,color:'#3d6652',label:m.snLabel},
+    {left:'T',right:'F',val:m.tf,color:'#b8441e',label:m.tfLabel},
+    {left:'J',right:'P',val:m.jp,color:'#2a4a7a',label:m.jpLabel}
+  ];
+  const barsHtml = bars.map(b=>'<div class="mbti-row"><span class="mbti-left">'+b.left+'</span><div class="mbti-track"><div class="mbti-fill" style="width:'+b.val+'%;background:'+b.color+'"></div></div><span class="mbti-right">'+b.right+'</span></div>').join('');
+  return '<div class="mbti-card"><div class="mbti-type">'+m.type+'</div><div style="font-size:.75rem;color:var(--ink-3);margin-bottom:4px">'+[m.eiLabel,m.snLabel,m.tfLabel,m.jpLabel].join(' · ')+'</div><div class="mbti-bars">'+barsHtml+'</div><div class="mbti-sketch">'+m.sketch+'</div></div>';
 }
 
-// ── AUTO-JOIN FROM URL ─────────────────────────────────────────────
-window.addEventListener('load',()=>{
-  const params=new URLSearchParams(window.location.search);
-  const join=params.get('join');
-  if(join){
-    showScreen('lobby');
-    document.getElementById('joinCode').value=join.toUpperCase();
-    document.getElementById('lobbyCreate').classList.remove('hidden');
-    document.getElementById('lobbyWaiting').classList.add('hidden');
+// ── RENDER COMPAT ────────────────────────────────────────────────
+function renderCompatResults(d, nameA, nameB) {
+  const score = d.compatScore || 72;
+  const scoreColor = score>=75?'var(--sage)':score>=50?'var(--gold)':'var(--accent)';
+
+  function personSection(p, name) {
+    if (!p) return '';
+    const pills = (p.traits||[]).map((t,i)=>'<span class="pill '+['warm','cool','neu'][i%3]+'">'+t+'</span>').join('');
+    const scoresHtml = Object.entries(p.scores||{}).map(([k,v])=>
+      '<div class="srow"><span class="slbl">'+k.charAt(0).toUpperCase()+k.slice(1)+'</span><div class="sbar"><div class="sfill" style="width:'+v+'%;background:'+(SC[k]||'#b8441e')+'"></div></div><span class="sval">'+v+'</span></div>'
+    ).join('');
+    const mbtiHtml = p.mbti ? mbtiCard(p.mbti) : '';
+    return '<div class="result-card"><div class="rlabel">'+name+'</div><p style="margin-bottom:6px">'+( p.summary||'')+'</p><div class="pills">'+pills+'</div><div class="scores-grid" style="margin-top:6px">'+scoresHtml+'</div></div>'+mbtiHtml;
   }
-  window.addEventListener('resize',()=>{
-    if(!document.getElementById('draw').classList.contains('hidden'))resizeCanvas();
-  });
+
+  document.getElementById('resultsBody').innerHTML =
+    '<div class="compat-hero"><div class="compat-score" style="color:'+scoreColor+'">'+score+'</div><div class="compat-lbl">'+(d.compatLabel||'Compatibility')+'</div>'+(d.chemistryNote?'<div class="compat-chem">"'+d.chemistryNote+'"</div>':'')+'</div>'+
+    '<div class="two-col">'+personSection(d.personA,nameA||'Person A')+personSection(d.personB,nameB||'Person B')+'</div>'+
+    '<div class="two-col"><div class="result-card"><div class="rlabel">Shared strengths</div><p>'+(d.sharedStrengths||'')+'</p></div><div class="result-card"><div class="rlabel">Growth edges</div><p>'+(d.growthEdges||'')+'</p></div></div>';
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+window.addEventListener('resize', () => { if (!document.getElementById('draw').classList.contains('hidden') && !canvas.classList.contains('hidden')) resizeCanvas(); });
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const join = params.get('join');
+  if (join) { document.getElementById('joinCode').value = join.toUpperCase(); goLobby(); }
 });
 </script>
 </body>
