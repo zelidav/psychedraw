@@ -210,10 +210,12 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
 .modal-backdrop.show .modal{transform:translateY(0)}
 .modal-title{font-family:"Caveat",cursive;font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
 .modal-sub{font-size:.84rem;color:var(--ink2);font-weight:300;margin-bottom:1.1rem;line-height:1.5}
-.stars{display:flex;gap:10px;justify-content:center;margin-bottom:1.1rem}
-.star{font-size:2rem;cursor:pointer;transition:transform .12s;filter:grayscale(1);opacity:.4}
-.star.lit{filter:none;opacity:1;transform:scale(1.15)}
-.star:active{transform:scale(.9)}
+.response-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem}
+.resp-btn{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border2);
+  background:var(--paper2);color:var(--ink);font-family:"DM Sans",sans-serif;
+  font-size:.84rem;text-align:left;cursor:pointer;transition:all .12s;font-weight:400}
+.resp-btn.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.resp-btn:active{transform:scale(.98)}
 .feedback-input{width:100%;border:1.5px solid var(--border2);border-radius:9px;
   padding:11px 13px;font-family:"DM Sans",sans-serif;font-size:.86rem;
   background:var(--paper2);color:var(--ink);outline:none;resize:none;
@@ -788,26 +790,23 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
     document.getElementById("feedbackBackdrop").classList.remove("show");
   }
 
-  document.getElementById("starRow").addEventListener("click", function(e) {
-    var star = e.target.closest(".star"); if (!star) return;
-    feedbackRating = +star.dataset.v;
-    document.querySelectorAll(".star").forEach(function(s) {
-      s.classList.toggle("lit", +s.dataset.v <= feedbackRating);
-    });
+  // Response option selection
+  document.getElementById("responseOpts").addEventListener("click", function(e) {
+    var btn = e.target.closest(".resp-btn"); if (!btn) return;
+    feedbackRating = +btn.dataset.v;
+    document.querySelectorAll(".resp-btn").forEach(function(b){ b.classList.toggle("sel", b === btn); });
   });
 
-  document.getElementById("btnFeedbackSkip").addEventListener("click", hideFeedback);
+  document.getElementById("btnFeedbackSkip").addEventListener("click", function() { hideFeedback(); });
 
   document.getElementById("btnFeedbackSend").addEventListener("click", function() {
     var text = document.getElementById("feedbackText").value.trim();
-    // Store locally — could POST to an endpoint later
     var entry = {rating: feedbackRating, text: text, ts: Date.now()};
     try { var prev = JSON.parse(localStorage.getItem("pd_feedback")||"[]"); prev.push(entry); localStorage.setItem("pd_feedback", JSON.stringify(prev)); } catch(e){}
     hideFeedback();
-    // Brief thank-you toast
     var toast = document.createElement("div");
     toast.textContent = "Thanks ♥";
-    toast.style.cssText = "position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:.85rem;z-index:400;pointer-events:none;opacity:1;transition:opacity .4s";
+    toast.style.cssText = "position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:.85rem;z-index:400;pointer-events:none;transition:opacity .4s";
     document.body.appendChild(toast);
     setTimeout(function(){ toast.style.opacity="0"; setTimeout(function(){ toast.remove(); }, 400); }, 1800);
   });
@@ -822,9 +821,16 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
     if (navigator.share) {
       navigator.share({title:"My PsycheDraw Reading", text:"Just got my personality reading from PsycheDraw." + mbtiText + " Try it:", url:window.location.origin});
     } else {
-      navigator.clipboard.writeText(window.location.origin).then(function(){ 
-        alert("Link copied!"); 
-      });
+      navigator.clipboard.writeText(window.location.origin).then(function(){ alert("Link copied!"); });
+    }
+  });
+
+  // Scroll-triggered feedback: show when user reaches bottom of analysis
+  document.getElementById("analysis").addEventListener("scroll", function() {
+    var el = this;
+    var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 40;
+    if (atBottom && !document.getElementById("feedbackBackdrop").classList.contains("show")) {
+      showFeedback();
     }
   });
 
@@ -840,11 +846,18 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
       (d.shadow ? '<div class="rcard" style="border-left:3px solid var(--accent)"><div class="rlabel">Shadow</div><p style="font-style:italic">'+d.shadow+'</p></div>' : "");
     // Show share fab
     document.getElementById("btnSoloShare").classList.remove("off");
-    // Reset and show feedback after a pause
+    // Reset feedback state (shown on scroll-to-bottom)
     feedbackRating = 0;
-    document.querySelectorAll(".star").forEach(function(s){ s.classList.remove("lit"); });
+    document.querySelectorAll(".resp-btn").forEach(function(b){ b.classList.remove("sel"); });
     document.getElementById("feedbackText").value = "";
-    setTimeout(showFeedback, 2200);
+    // Append HTP footer
+    var htpFooter = '<div style="text-align:center;padding:1.5rem 1rem 2rem;border-top:1px solid var(--border);margin-top:.5rem">' +
+      '<p style="font-size:.7rem;color:var(--ink3);line-height:1.7">' +
+      'Based on the <a href="https://en.wikipedia.org/wiki/House%E2%80%93Tree%E2%80%93Person_test" target="_blank" style="color:var(--ink3);text-decoration:underline;text-underline-offset:2px">House&#8211;Tree&#8211;Person projective test</a>, ' +
+      'developed by John Buck (1948). For entertainment purposes.<br>' +
+      '<a href="https://www.verywellmind.com/house-tree-person-test-4799021" target="_blank" style="color:var(--ink3);text-decoration:underline;text-underline-offset:2px">Learn more about HTP</a>' +
+      '</p></div>';
+    document.getElementById("analysisBody").innerHTML += htpFooter;
   }
 
   function personBlock(p, name) {
@@ -900,17 +913,17 @@ canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
 <div class="modal-backdrop" id="feedbackBackdrop">
   <div class="modal" id="feedbackModal">
     <div class="modal-title">Did we get you right? &#129300;</div>
-    <div class="modal-sub">Rate how accurate your reading felt</div>
-    <div class="stars" id="starRow">
-      <span class="star" data-v="1">&#9733;</span>
-      <span class="star" data-v="2">&#9733;</span>
-      <span class="star" data-v="3">&#9733;</span>
-      <span class="star" data-v="4">&#9733;</span>
-      <span class="star" data-v="5">&#9733;</span>
+    <div class="modal-sub">How accurate did your reading feel?</div>
+    <div class="response-opts" id="responseOpts">
+      <button class="resp-btn" data-v="1">Totally off base</button>
+      <button class="resp-btn" data-v="2">A few things rang true</button>
+      <button class="resp-btn" data-v="3">Pretty accurate</button>
+      <button class="resp-btn" data-v="4">Uncomfortably accurate</button>
+      <button class="resp-btn" data-v="5">It&#8217;s like you&#8217;ve known me all my life</button>
     </div>
-    <textarea class="feedback-input" id="feedbackText" rows="3" placeholder="Anything feel off? Spot on? Tell us&#8230;"></textarea>
+    <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Anything feel off? Tell us&#8230; (optional)"></textarea>
     <div class="modal-actions">
-      <button class="btn btnS" id="btnFeedbackSkip" style="flex:1;padding:12px">Skip</button>
+      <button class="btn btnS" id="btnFeedbackSkip" style="flex:1;padding:12px">Maybe later</button>
       <button class="btn btnP" id="btnFeedbackSend" style="flex:2;padding:12px">Send &#10003;</button>
     </div>
   </div>
