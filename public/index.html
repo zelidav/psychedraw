@@ -558,7 +558,7 @@ async function createSession() {
   const res = await fetch('/api/session/create', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
   const data = await res.json();
   sessionCode = data.code; sessionSlot = 'a';
-  sessionName = prompt('Your name:', 'Person A') || 'Person A';
+  sessionName = window.prompt('Your name for the session:') || 'Person A';
   document.getElementById('codeDisplay').textContent = sessionCode;
   document.getElementById('lobbyCreate').classList.add('hidden');
   document.getElementById('lobbyWaiting').classList.remove('hidden');
@@ -570,7 +570,7 @@ async function joinSession() {
   const res = await fetch('/api/session/'+code);
   if (!res.ok) { alert('Session not found — check the code'); return; }
   sessionCode = code; sessionSlot = 'b';
-  sessionName = prompt('Your name:', 'Person B') || 'Person B';
+  sessionName = window.prompt('Your name for the session:') || 'Person B';
   drawMode = 'session'; drawings = []; pressureReadings = []; peakPressure = 0;
   showScreen('draw'); initStep(0);
 }
@@ -670,6 +670,26 @@ window.addEventListener('load', () => {
   const join = params.get('join');
   if (join) { document.getElementById('joinCode').value = join.toUpperCase(); goLobby(); }
 });
+
+// ── EXPOSE TO WINDOW (required for inline onclick on mobile) ────
+window.startSolo = startSolo;
+window.goLobby = goLobby;
+window.showScreen = showScreen;
+window.undoCanvas = undoCanvas;
+window.setTool = setTool;
+window.setColor = setColor;
+window.nextStep = nextStep;
+window.drawBack = drawBack;
+window.triggerUpload = triggerUpload;
+window.handleUpload = handleUpload;
+window.dismissTransition = dismissTransition;
+window.createSession = createSession;
+window.joinSession = joinSession;
+window.startSessionDraw = startSessionDraw;
+window.shareSessionCode = shareSessionCode;
+window.checkAndAnalyze = checkAndAnalyze;
+window.shareResults = shareResults;
+
 </script>
 </body>
 </html>
