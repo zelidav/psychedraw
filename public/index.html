@@ -36,15 +36,20 @@ body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);p
 .qr-canvas-wrap{background:#fff;padding:8px;border-radius:6px;border:1px solid var(--border)}
 .qr-label{font-size:.8rem;color:var(--ink2);line-height:1.5}
 .qr-sublabel{font-size:.7rem;color:var(--ink3);font-style:italic}
-#waiting{background:var(--napkin);align-items:center;justify-content:center;gap:20px;padding:2rem 1.5rem calc(2rem + var(--sab));text-align:center}
-.wait-title{font-family:"Caveat",cursive;font-size:2rem;font-weight:700}
-.wait-sub{font-size:.85rem;color:var(--ink3);line-height:1.6;max-width:280px}
-.code-box{background:var(--paper2);border:1.5px solid var(--border2);border-radius:10px;padding:14px 24px;font-family:"Caveat",cursive;font-size:2.2rem;letter-spacing:.2em;color:var(--ink)}
-.status-dots{display:flex;gap:20px;align-items:center}
+.code-hero{background:var(--ink);color:#fff;border-radius:12px;padding:1rem;text-align:center;margin-bottom:.25rem}
+.code-hero-label{font-size:.68rem;opacity:.6;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.code-hero-val{font-family:"Caveat",cursive;font-size:2.8rem;letter-spacing:.25em;font-weight:700;line-height:1}
+.share-row{display:flex;gap:8px}
+.share-row .btn{flex:1;padding:11px 8px;font-size:.82rem}
+.status-dots{display:flex;gap:20px;align-items:center;justify-content:center;margin:.5rem 0}
 .sdot{width:12px;height:12px;border-radius:50%;background:var(--border2);transition:background .3s}
 .sdot.on{background:var(--sage)}
 .slabel{font-size:.78rem;color:var(--ink3);margin-top:4px;text-align:center}
 .status-pair{display:flex;flex-direction:column;align-items:center;gap:4px}
+#waiting{background:var(--napkin);align-items:center;justify-content:center;gap:20px;padding:2rem 1.5rem calc(2rem + var(--sab));text-align:center}
+.wait-title{font-family:"Caveat",cursive;font-size:2rem;font-weight:700}
+.wait-sub{font-size:.85rem;color:var(--ink3);line-height:1.6;max-width:280px}
+.code-box{background:var(--paper2);border:1.5px solid var(--border2);border-radius:10px;padding:14px 24px;font-family:"Caveat",cursive;font-size:2.2rem;letter-spacing:.2em;color:var(--ink)}
 #draw{display:flex;flex-direction:column;height:calc(var(--vh,1vh)*100);overflow:hidden}
 .draw-top{display:flex;align-items:center;padding:.5rem .75rem;gap:8px;flex-shrink:0;background:var(--napkin);border-bottom:1px solid var(--border)}
 .step-label{flex:1;text-align:center;font-family:"Caveat",cursive;font-size:1.15rem;font-weight:700;color:var(--ink2)}
@@ -105,7 +110,6 @@ input[type=range]{width:52px;accent-color:var(--ink);flex-shrink:0}
 .response-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem}
 .resp-btn{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border2);background:var(--paper2);color:var(--ink);font-family:"DM Sans",sans-serif;font-size:.84rem;text-align:left;cursor:pointer;transition:all .12s}
 .resp-btn.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
-.resp-btn:active{transform:scale(.98)}
 .feedback-input{width:100%;border:1.5px solid var(--border2);border-radius:9px;padding:11px 13px;font-family:"DM Sans",sans-serif;font-size:.86rem;background:var(--paper2);color:var(--ink);outline:none;resize:none;line-height:1.5;margin-bottom:1rem}
 .feedback-input:focus{border-color:var(--accent)}
 .modal-actions{display:flex;gap:8px}
@@ -128,29 +132,38 @@ input[type=range]{width:52px;accent-color:var(--ink);flex-shrink:0}
       <button class="back-btn" id="btnLobbyBack">&#8592;</button>
       <div class="lobby-title">Session</div>
     </div>
+    <!-- CREATE PANEL -->
     <div id="lobbyCreate">
       <div class="section-label">Start a new session</div>
       <button class="btn btnP" id="btnCreate" style="margin-top:6px">Create Session</button>
-      <div class="qr-panel" id="qrPanel" style="margin-top:8px">
-        <div class="qr-canvas-wrap"><canvas id="qrCanvas" width="160" height="160"></canvas></div>
-        <div class="qr-label">Scan with your phone to draw &amp; join</div>
-        <div class="qr-sublabel">Results appear here when both are done</div>
-      </div>
       <div class="section-label" style="margin-top:1rem">Or join one</div>
-      <button class="btn btnG" id="btnShowQR" style="margin-top:6px">&#128247;&nbsp; Scan QR to draw on phone</button>
-      <input class="joininput" id="joinCode" placeholder="ABC123" maxlength="6" style="margin-top:8px">
+      <input class="joininput" id="joinCode" placeholder="ABC123" maxlength="6" style="margin-top:6px">
       <button class="btn btnS" id="btnJoin" style="margin-top:6px">Join Session</button>
     </div>
+    <!-- WAITING PANEL (after code created) -->
     <div id="lobbyWaiting" class="off">
-      <div class="section-label">Waiting for partner&hellip;</div>
-      <div class="code-box" id="codeDisplay" style="margin-top:8px;text-align:center"></div>
-      <div class="status-dots" style="margin-top:12px;justify-content:center">
+      <div class="code-hero">
+        <div class="code-hero-label">Your session code</div>
+        <div class="code-hero-val" id="codeDisplay"></div>
+      </div>
+      <!-- QR always visible once session created -->
+      <div class="qr-panel show" id="qrPanel">
+        <div class="qr-canvas-wrap"><canvas id="qrCanvas" width="160" height="160"></canvas></div>
+        <div class="qr-label">Scan to join on another device</div>
+        <div class="qr-sublabel">Or share the code above</div>
+      </div>
+      <!-- Share row -->
+      <div class="share-row">
+        <button class="btn btnS" id="btnShareCode">&#128279; Share Link</button>
+        <button class="btn btnS" id="btnCopyCode">&#128203; Copy Code</button>
+      </div>
+      <!-- Partner status -->
+      <div class="status-dots">
         <div class="status-pair"><div class="sdot on" id="sdotA"></div><div class="slabel" id="slabelA">You</div></div>
         <div style="color:var(--border2);font-size:1.2rem">&#8212;</div>
-        <div class="status-pair"><div class="sdot" id="sdotB"></div><div class="slabel" id="slabelB">Them</div></div>
+        <div class="status-pair"><div class="sdot" id="sdotB"></div><div class="slabel" id="slabelB">Waiting...</div></div>
       </div>
-      <button class="btn btnS" id="btnShareCode" style="margin-top:12px">Share Code</button>
-      <button class="btn btnP" id="btnStartDraw" style="margin-top:8px">Start Drawing</button>
+      <button class="btn btnP" id="btnStartDraw">Start Drawing</button>
     </div>
   </div>
 </div>
@@ -244,11 +257,16 @@ setVH();window.addEventListener('resize',setVH);window.addEventListener('orienta
 document.addEventListener('gesturestart',function(e){e.preventDefault()});
 document.addEventListener('gesturechange',function(e){e.preventDefault()});
 document.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
-var mode='solo',step=0,drawings=[null,null,null],sessCode='',sessSlot='a',sessName='You',pollTimer=null,hasDrawn=false,feedbackRating=0;
+
+var mode='solo',step=0,drawings=[null,null,null],sessCode='',sessSlot='a',sessName='You',pollTimer=null,hasDrawn=false,feedbackRating=0,qrGenerated=false;
 var STEPS=[{label:'Draw the House',hint:'Draw any kind of house you like'},{label:'Draw the Tree',hint:'Any tree — big, small, bare or full'},{label:'Draw a Person',hint:'A whole person, any style you like'}];
+
 function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.add('off')});document.getElementById(id).classList.remove('off')}
+
 var canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),drawing=false,currentColor='#1c1410',brushSz=4,tool='pen',undoStack=[];
-function resizeCanvas(){var img=canvas.toDataURL();canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;if(undoStack.length){var i=new Image();i.onload=function(){ctx.drawImage(i,0,0)};i.src=img}}
+
+function resizeCanvas(){var data=ctx.getImageData(0,0,canvas.width,canvas.height);canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;try{ctx.putImageData(data,0,0)}catch(e){}}
+
 function saveUndo(){undoStack.push(canvas.toDataURL());if(undoStack.length>20)undoStack.shift()}
 function getPos(e){var r=canvas.getBoundingClientRect(),src=e.touches?e.touches[0]:e;return{x:src.clientX-r.left,y:src.clientY-r.top}}
 function startDraw(e){e.preventDefault();saveUndo();drawing=true;var p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);onFirstMark()}
@@ -256,57 +274,186 @@ function moveDraw(e){e.preventDefault();if(!drawing)return;var p=getPos(e);ctx.l
 function endDraw(){drawing=false}
 canvas.addEventListener('mousedown',startDraw);canvas.addEventListener('mousemove',moveDraw);canvas.addEventListener('mouseup',endDraw);
 canvas.addEventListener('touchstart',startDraw,{passive:false});canvas.addEventListener('touchmove',moveDraw,{passive:false});canvas.addEventListener('touchend',endDraw);
+
 function onFirstMark(){if(hasDrawn)return;hasDrawn=true;var sb=document.getElementById('btnSmart');sb.classList.add('next');document.getElementById('uploadIcon').style.display='none';document.getElementById('smartLabel').textContent=step<2?'Next →':'Done ✓'}
+
 document.getElementById('btnPen').addEventListener('click',function(){tool='pen';document.getElementById('btnPen').classList.add('active');document.getElementById('btnEraser').classList.remove('active')});
 document.getElementById('btnEraser').addEventListener('click',function(){tool='eraser';document.getElementById('btnEraser').classList.add('active');document.getElementById('btnPen').classList.remove('active')});
 document.getElementById('colorRow').addEventListener('click',function(e){var dot=e.target.closest('.color-dot');if(!dot)return;currentColor=dot.dataset.color;document.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('sel')});dot.classList.add('sel');tool='pen';document.getElementById('btnPen').classList.add('active');document.getElementById('btnEraser').classList.remove('active')});
 document.getElementById('brushSize').addEventListener('input',function(){brushSz=+this.value});
 document.getElementById('btnUndo').addEventListener('click',function(){if(!undoStack.length)return;var prev=undoStack.pop(),img=new Image();img.onload=function(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0)};img.src=prev});
+
 var fileInput=document.getElementById('fileInput');
 document.getElementById('btnSmart').addEventListener('click',function(){if(!hasDrawn)fileInput.click();else advanceStep()});
 fileInput.addEventListener('change',function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var img=new Image();img.onload=function(){ctx.clearRect(0,0,canvas.width,canvas.height);var scale=Math.min(canvas.width/img.width,canvas.height/img.height),w=img.width*scale,h=img.height*scale;ctx.drawImage(img,(canvas.width-w)/2,(canvas.height-h)/2,w,h);onFirstMark()};img.src=ev.target.result};reader.readAsDataURL(file);this.value=''});
-function resetStep(){ctx.clearRect(0,0,canvas.width,canvas.height);undoStack=[];hasDrawn=false;var sb=document.getElementById('btnSmart');sb.classList.remove('next','done');document.getElementById('uploadIcon').style.display='';document.getElementById('smartLabel').textContent='Upload';document.getElementById('btnPen').classList.add('active');document.getElementById('btnEraser').classList.remove('active');tool='pen'}
-function loadStep(){document.getElementById('stepLabel').textContent=STEPS[step].label;document.getElementById('stepHint').textContent=STEPS[step].hint;document.querySelectorAll('.pdot').forEach(function(d,i){d.classList.toggle('on',i===step)});var sb=document.getElementById('btnSmart');if(drawings[step]){var img=new Image();img.onload=function(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);hasDrawn=true;sb.classList.add(step<2?'next':'done');document.getElementById('uploadIcon').style.display='none';document.getElementById('smartLabel').textContent=step<2?'Next →':'Done ✓'};img.src=drawings[step]}else{resetStep()}}
-function advanceStep(){drawings[step]=canvas.toDataURL('image/jpeg',0.7);if(step<2){step++;loadStep()}else{submitAll()}}
-function submitAll(){document.getElementById('stepLabel').textContent='Analyzing…';document.getElementById('btnSmart').disabled=true;if(mode==='solo'){fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({house:drawings[0],tree:drawings[1],person:drawings[2]})}).then(function(r){return r.json()}).then(function(res){if(res.error){alert(res.error);return}showScreen('analysis');renderSolo(res)}).catch(function(e){alert('Analysis failed: '+e.message)})}else{fetch('/api/session/'+sessCode+'/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot:sessSlot,name:sessName,house:drawings[0],tree:drawings[1],person:drawings[2]})}).then(function(r){return r.json()}).then(function(){document.getElementById('waitCode').textContent=sessCode;showScreen('waiting');startPoll()}).catch(function(e){alert('Submit failed: '+e.message)})}}
+
+function resetStep(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  undoStack=[];hasDrawn=false;
+  var sb=document.getElementById('btnSmart');
+  sb.classList.remove('next','done');
+  sb.disabled=false; // FIX: always re-enable button on reset
+  document.getElementById('uploadIcon').style.display='';
+  document.getElementById('smartLabel').textContent='Upload';
+  document.getElementById('btnPen').classList.add('active');
+  document.getElementById('btnEraser').classList.remove('active');
+  tool='pen';
+}
+
+function loadStep(){
+  document.getElementById('stepLabel').textContent=STEPS[step].label;
+  document.getElementById('stepHint').textContent=STEPS[step].hint;
+  document.querySelectorAll('.pdot').forEach(function(d,i){d.classList.toggle('on',i===step)});
+  var sb=document.getElementById('btnSmart');
+  sb.disabled=false; // FIX: always re-enable on loadStep
+  if(drawings[step]){
+    var img=new Image();
+    img.onload=function(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);hasDrawn=true;sb.classList.add(step<2?'next':'done');document.getElementById('uploadIcon').style.display='none';document.getElementById('smartLabel').textContent=step<2?'Next →':'Done ✓'};
+    img.src=drawings[step];
+  }else{resetStep()}
+}
+
+function advanceStep(){
+  drawings[step]=canvas.toDataURL('image/jpeg',0.7);
+  if(step<2){step++;loadStep()}
+  else{submitAll()}
+}
+
+function submitAll(){
+  document.getElementById('stepLabel').textContent='Analyzing…';
+  var sb=document.getElementById('btnSmart');
+  sb.disabled=true;sb.classList.remove('next');sb.classList.add('done');
+  document.getElementById('smartLabel').textContent='Wait…';
+
+  if(mode==='solo'){
+    fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({house:drawings[0],tree:drawings[1],person:drawings[2]})})
+    .then(function(r){return r.json()})
+    .then(function(res){
+      // FIX: re-enable button before switching screens
+      sb.disabled=false;
+      if(res.error){alert(res.error);document.getElementById('stepLabel').textContent=STEPS[2].label;sb.classList.remove('done');sb.classList.add('next');document.getElementById('smartLabel').textContent='Done ✓';return}
+      showScreen('analysis');renderSolo(res);
+    })
+    .catch(function(e){sb.disabled=false;alert('Analysis failed: '+e.message)});
+  }else{
+    fetch('/api/session/'+sessCode+'/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot:sessSlot,name:sessName,house:drawings[0],tree:drawings[1],person:drawings[2]})})
+    .then(function(r){return r.json()})
+    .then(function(){sb.disabled=false;document.getElementById('waitCode').textContent=sessCode;showScreen('waiting');startPoll()})
+    .catch(function(e){sb.disabled=false;alert('Submit failed: '+e.message)});
+  }
+}
+
 function startPoll(){if(pollTimer)clearInterval(pollTimer);pollTimer=setInterval(function(){checkAndAnalyze(false)},3500)}
-function checkAndAnalyze(force){fetch('/api/session/'+sessCode).then(function(r){return r.json()}).then(function(d){if(d.nameB){document.getElementById('wdotB').classList.add('on');document.getElementById('wlabelB').textContent=(d.nameB||'Them')+' ✓'}if(d.hasA&&d.hasB){if(pollTimer)clearInterval(pollTimer);fireNotification();fetch('/api/session/'+sessCode+'/analyze',{method:'POST'}).then(function(r){return r.json()}).then(function(res){showScreen('results');renderCompat(res,d.nameA||'Person A',d.nameB||'Person B')})}else if(force){alert('Still waiting… hang tight!')}})}
-function fireNotification(){if('Notification'in window&&Notification.permission==='granted'){var n=new Notification('PsycheDraw – They’re done! 🎉',{body:'Your drawing partner finished. Tap to see your compatibility reading.',requireInteraction:true});n.onclick=function(){window.focus();n.close()}}}
+function checkAndAnalyze(force){
+  fetch('/api/session/'+sessCode)
+  .then(function(r){return r.json()})
+  .then(function(d){
+    if(d.nameB){document.getElementById('wdotB').classList.add('on');document.getElementById('wlabelB').textContent=(d.nameB||'Them')+' ✓'}
+    if(d.hasA&&d.hasB){
+      if(pollTimer)clearInterval(pollTimer);
+      fireNotification();
+      fetch('/api/session/'+sessCode+'/analyze',{method:'POST'})
+      .then(function(r){return r.json()})
+      .then(function(res){showScreen('results');renderCompat(res,d.nameA||'Person A',d.nameB||'Person B')});
+    }else if(force){alert('Still waiting… hang tight!')}
+  });
+}
+
+function fireNotification(){if('Notification'in window&&Notification.permission==='granted'){var n=new Notification('PsycheDraw – They’re done! 🎉',{body:'Tap to see your compatibility reading.',requireInteraction:true});n.onclick=function(){window.focus();n.close()}}}
 function requestNotifyAndBrowse(){if(!('Notification'in window)){window.open(window.location.origin+'?waiting='+sessCode,'_blank');return}if(Notification.permission==='granted'){window.open(window.location.origin+'?waiting='+sessCode,'_blank')}else if(Notification.permission!=='denied'){Notification.requestPermission().then(function(p){if(p==='granted')new Notification('PsycheDraw',{body:'We’ll let you know when they’re done!'});window.open(window.location.origin+'?waiting='+sessCode,'_blank')})}else{window.open(window.location.origin+'?waiting='+sessCode,'_blank')}}
-function generateQR(url){if(!window.QRCode){setTimeout(function(){generateQR(url)},300);return}var c=document.getElementById('qrCanvas');if(!c)return;QRCode.toCanvas(c,url,{width:160,margin:2,color:{dark:'#1c1410',light:'#fffdf7'}},function(err){if(err)console.error('QR:',err)})}
-function createAndShowQR(){fetch('/api/session/create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json()}).then(function(d){sessCode=d.code;sessSlot='a';sessName='Desktop';document.getElementById('codeDisplay').textContent=sessCode;var joinUrl=window.location.origin+'?join='+sessCode;document.getElementById('qrPanel').classList.add('show');generateQR(joinUrl);document.getElementById('lobbyCreate').classList.add('off');document.getElementById('lobbyWaiting').classList.remove('off');if(window._joinPoll)clearInterval(window._joinPoll);window._joinPoll=setInterval(function(){fetch('/api/session/'+sessCode).then(function(r){return r.json()}).then(function(s){if(s.nameB){document.getElementById('sdotB').classList.add('on');document.getElementById('slabelB').textContent=s.nameB}})},2000)})}
+
+function generateQR(url,canvasId){
+  if(!window.QRCode){setTimeout(function(){generateQR(url,canvasId)},300);return}
+  var c=document.getElementById(canvasId||'qrCanvas');if(!c)return;
+  // Clear previous QR
+  var ctx2=c.getContext('2d');ctx2.clearRect(0,0,c.width,c.height);
+  QRCode.toCanvas(c,url,{width:160,margin:2,color:{dark:'#1c1410',light:'#fffdf7'}},function(err){if(err)console.error('QR:',err)});
+}
+
+function showToast(msg){var t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:.85rem;z-index:400;pointer-events:none;transition:opacity .4s;white-space:nowrap';document.body.appendChild(t);setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove()},400)},1800)}
+
 function pill(t){return'<span class="pill">'+t+'</span>'}
 function mbtiCard(mbti){if(!mbti)return'';var pairs=[['E','I'],['S','N'],['T','F'],['J','P']];var bars=pairs.map(function(pr){var a=mbti.indexOf(pr[0])!==-1,pct=a?65+Math.round(Math.random()*20):35-Math.round(Math.random()*20);return'<div class="mbar-row"><span class="mbar-lbl">'+pr[0]+'</span><div class="mbar-track"><div class="mbar-fill" style="width:'+pct+'%"></div></div><span class="mbar-lbl2">'+pr[1]+'</span></div>'}).join('');var names={INTJ:'The Architect',INTP:'The Thinker',ENTJ:'The Commander',ENTP:'The Debater',INFJ:'The Advocate',INFP:'The Mediator',ENFJ:'The Protagonist',ENFP:'The Campaigner',ISTJ:'The Logistician',ISFJ:'The Defender',ESTJ:'The Executive',ESFJ:'The Consul',ISTP:'The Virtuoso',ISFP:'The Adventurer',ESTP:'The Entrepreneur',ESFP:'The Entertainer'};return'<div class="mbti-card"><div class="mtype">'+mbti+'</div><div class="mname">'+(names[mbti]||'')+'</div><div class="mbars">'+bars+'</div></div>'}
 function scoreRows(scores){if(!scores)return'';var map={EI:['Extrovert','Introvert'],SN:['Sensing','Intuition'],TF:['Thinking','Feeling'],JP:['Judging','Perceiving']};return Object.keys(scores).map(function(k){var lbls=map[k]||[k,''],v=scores[k]||50;return'<div class="srow"><div class="srow-labels"><span>'+lbls[0]+'</span><span>'+lbls[1]+'</span></div><div class="srow-track"><div class="srow-fill" style="width:'+v+'%"></div></div></div>'}).join('')}
+
 function renderSolo(d){var pills=(d.traits||[]).map(pill).join(''),elems=['house','tree','person'].filter(function(k){return d[k]}).map(function(k){return'<div class="rcard"><div class="rlabel">'+k+'</div><p>'+d[k]+'</p></div>'}).join('');var footer='<div style="text-align:center;padding:1.5rem 1rem 2.5rem;border-top:1px solid var(--border);margin-top:.25rem"><p style="font-size:.7rem;color:var(--ink3);line-height:1.8">Based on the <a href="https://en.wikipedia.org/wiki/House%E2%80%93Tree%E2%80%93Person_test" target="_blank" style="color:var(--ink3);text-decoration:underline">House–Tree–Person projective test</a>, developed by John Buck (1948). For entertainment &amp; self-reflection. <a href="https://www.verywellmind.com/house-tree-person-test-4799021" target="_blank" style="color:var(--ink3);text-decoration:underline">Learn more</a></p></div>';document.getElementById('analysisBody').innerHTML='<div class="rcard"><div class="rlabel">Overview</div><p>'+(d.overview||'')+'</p><div class="pills">'+pills+'</div></div>'+mbtiCard(d.mbti)+elems+'<div class="rcard"><div class="rlabel">Dimensions</div><div class="srows">'+scoreRows(d.scores)+'</div></div>'+(d.shadow?'<div class="rcard" style="border-left:3px solid var(--accent)"><div class="rlabel">Shadow</div><p style="font-style:italic">'+d.shadow+'</p></div>':'')+footer;document.getElementById('btnSoloShare').classList.remove('off');feedbackRating=0;document.querySelectorAll('.resp-btn').forEach(function(b){b.classList.remove('sel')});var ft=document.getElementById('feedbackText');if(ft)ft.value=''}
 function personBlock(p,name){if(!p)return'';var pills=(p.traits||[]).map(pill).join('');return'<div class="rcard"><div class="rlabel">'+name+'</div><p style="margin-bottom:7px">'+(p.summary||'')+'</p><div class="pills">'+pills+'</div><div class="srows" style="margin-top:7px">'+scoreRows(p.scores)+'</div></div>'+mbtiCard(p.mbti)}
 function renderCompat(d,nameA,nameB){var score=d.compatScore||72,sc=score>=75?'var(--sage)':score>=50?'var(--gold)':'var(--accent)';document.getElementById('resultsBody').innerHTML='<div class="chero"><div class="cscore" style="color:'+sc+'">'+score+'</div><div class="clbl">'+(d.compatLabel||'Compatibility')+'</div>'+(d.chemistryNote?'<div class="cchem">“'+d.chemistryNote+'”</div>':'')+'</div><div class="twocol">'+personBlock(d.personA,nameA)+personBlock(d.personB,nameB)+'</div><div class="twocol"><div class="rcard"><div class="rlabel">Shared strengths</div><p>'+(d.sharedStrengths||'')+'</p></div><div class="rcard"><div class="rlabel">Growth edges</div><p>'+(d.growthEdges||'')+'</p></div></div>'}
+
+// NAV
 document.getElementById('btnSolo').addEventListener('click',function(){mode='solo';step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()})});
-document.getElementById('btnSession').addEventListener('click',function(){mode='session';document.getElementById('lobbyCreate').classList.remove('off');document.getElementById('lobbyWaiting').classList.add('off');document.getElementById('qrPanel').classList.remove('show');showScreen('lobby')});
+document.getElementById('btnSession').addEventListener('click',function(){mode='session';document.getElementById('lobbyCreate').classList.remove('off');document.getElementById('lobbyWaiting').classList.add('off');showScreen('lobby')});
 document.getElementById('btnLobbyBack').addEventListener('click',function(){showScreen('home')});
 document.getElementById('btnBack').addEventListener('click',function(){if(mode==='session')showScreen('lobby');else showScreen('home')});
 document.getElementById('btnAnalysisHome').addEventListener('click',function(){showScreen('home');document.getElementById('btnSoloShare').classList.add('off');hideFeedback()});
 document.getElementById('btnResultsHome').addEventListener('click',function(){showScreen('home')});
-document.getElementById('btnCreate').addEventListener('click',function(){fetch('/api/session/create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json()}).then(function(d){sessCode=d.code;sessSlot='a';sessName='You';document.getElementById('codeDisplay').textContent=sessCode;document.getElementById('lobbyCreate').classList.add('off');document.getElementById('lobbyWaiting').classList.remove('off')})});
-document.getElementById('btnShowQR').addEventListener('click',function(){if(sessCode){document.getElementById('qrPanel').classList.add('show');generateQR(window.location.origin+'?join='+sessCode)}else{createAndShowQR()}});
-document.getElementById('btnJoin').addEventListener('click',function(){var code=document.getElementById('joinCode').value.trim().toUpperCase();if(!code)return;sessCode=code;sessSlot='b';sessName='Them';step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()})});
-document.getElementById('btnShareCode').addEventListener('click',function(){var url=window.location.origin+'?join='+sessCode;if(!('ontouchstart'in window)&&window.QRCode){document.getElementById('qrPanel').classList.add('show');generateQR(url)}else if(navigator.share){navigator.share({title:'Join my PsycheDraw session',text:'Code: '+sessCode,url:url})}else{navigator.clipboard.writeText(url).then(function(){alert('Link copied!')})}});
-document.getElementById('btnStartDraw').addEventListener('click',function(){step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()})});
+
+// LOBBY ACTIONS
+document.getElementById('btnCreate').addEventListener('click',function(){
+  fetch('/api/session/create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
+  .then(function(r){return r.json()})
+  .then(function(d){
+    sessCode=d.code;sessSlot='a';sessName='You';qrGenerated=false;
+    document.getElementById('codeDisplay').textContent=sessCode;
+    document.getElementById('lobbyCreate').classList.add('off');
+    document.getElementById('lobbyWaiting').classList.remove('off');
+    // Generate QR immediately
+    setTimeout(function(){generateQR(window.location.origin+'?join='+sessCode,'qrCanvas');qrGenerated=true},100);
+    // Poll for partner joining
+    if(window._joinPoll)clearInterval(window._joinPoll);
+    window._joinPoll=setInterval(function(){
+      fetch('/api/session/'+sessCode).then(function(r){return r.json()}).then(function(s){
+        if(s.nameB){document.getElementById('sdotB').classList.add('on');document.getElementById('slabelB').textContent=s.nameB+' joined ✓'}
+      });
+    },2000);
+  });
+});
+
+document.getElementById('btnJoin').addEventListener('click',function(){
+  var code=document.getElementById('joinCode').value.trim().toUpperCase();
+  if(!code)return;
+  sessCode=code;sessSlot='b';sessName='Them';step=0;drawings=[null,null,null];
+  showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()});
+});
+
+document.getElementById('btnShareCode').addEventListener('click',function(){
+  var url=window.location.origin+'?join='+sessCode;
+  if(navigator.share){navigator.share({title:'Join my PsycheDraw session',text:'Code: '+sessCode,url:url})}
+  else{navigator.clipboard.writeText(url).then(function(){showToast('Link copied!')})}
+});
+
+document.getElementById('btnCopyCode').addEventListener('click',function(){
+  navigator.clipboard.writeText(sessCode).then(function(){showToast('Code copied: '+sessCode)}).catch(function(){showToast(sessCode)});
+});
+
+document.getElementById('btnStartDraw').addEventListener('click',function(){
+  step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()});
+});
+
+// WAITING SCREEN
 document.getElementById('btnCheckNow').addEventListener('click',function(){checkAndAnalyze(true)});
 document.getElementById('btnBrowseFree').addEventListener('click',function(){requestNotifyAndBrowse()});
+
+// FEEDBACK
 function showFeedback(){document.getElementById('feedbackBackdrop').classList.add('show')}
 function hideFeedback(){document.getElementById('feedbackBackdrop').classList.remove('show')}
 document.getElementById('responseOpts').addEventListener('click',function(e){var btn=e.target.closest('.resp-btn');if(!btn)return;feedbackRating=+btn.dataset.v;document.querySelectorAll('.resp-btn').forEach(function(b){b.classList.toggle('sel',b===btn)})});
 document.getElementById('btnFeedbackSkip').addEventListener('click',function(){hideFeedback()});
-document.getElementById('btnFeedbackSend').addEventListener('click',function(){var text=document.getElementById('feedbackText').value.trim();try{var prev=JSON.parse(localStorage.getItem('pd_feedback')||'[]');prev.push({rating:feedbackRating,text:text,ts:Date.now()});localStorage.setItem('pd_feedback',JSON.stringify(prev))}catch(e){}hideFeedback();var toast=document.createElement('div');toast.textContent='Thanks ♥';toast.style.cssText='position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:.85rem;z-index:400;pointer-events:none;transition:opacity .4s';document.body.appendChild(toast);setTimeout(function(){toast.style.opacity='0';setTimeout(function(){toast.remove()},400)},1800)});
+document.getElementById('btnFeedbackSend').addEventListener('click',function(){var text=document.getElementById('feedbackText').value.trim();try{var prev=JSON.parse(localStorage.getItem('pd_feedback')||'[]');prev.push({rating:feedbackRating,text:text,ts:Date.now()});localStorage.setItem('pd_feedback',JSON.stringify(prev))}catch(e){}hideFeedback();showToast('Thanks ♥')});
 document.getElementById('feedbackBackdrop').addEventListener('click',function(e){if(e.target===this)hideFeedback()});
 document.getElementById('analysis').addEventListener('scroll',function(){if(this.scrollTop+this.clientHeight>=this.scrollHeight-60){if(!document.getElementById('feedbackBackdrop').classList.contains('show'))showFeedback()}});
-function doShare(){var mbti=document.querySelector('.mtype'),mbtiText=mbti?' I got '+mbti.textContent+'.':'';if(navigator.share){navigator.share({title:'My PsycheDraw Reading',text:'Just got my personality reading from PsycheDraw.'+mbtiText+' Try it:',url:window.location.origin})}else{navigator.clipboard.writeText(window.location.origin).then(function(){alert('Link copied!')})}}
+
+// SHARE
+function doShare(){var mbti=document.querySelector('.mtype'),mbtiText=mbti?' I got '+mbti.textContent+'.':'';if(navigator.share){navigator.share({title:'My PsycheDraw Reading',text:'Just got my personality reading from PsycheDraw.'+mbtiText+' Try it:',url:window.location.origin})}else{navigator.clipboard.writeText(window.location.origin).then(function(){showToast('Link copied!')})}}
 document.getElementById('btnSoloShare').addEventListener('click',doShare);
 document.getElementById('btnShareInline').addEventListener('click',doShare);
+
+// DEEP LINKS
 var params=new URLSearchParams(window.location.search);
-var joinParam=params.get('join');if(joinParam){sessCode=joinParam.toUpperCase();mode='session';sessSlot='b';sessName='Them';document.getElementById('joinCode').value=sessCode;step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()})}
-var waitingParam=params.get('waiting');if(waitingParam){sessCode=waitingParam.toUpperCase();mode='session';document.getElementById('waitCode').textContent=sessCode;showScreen('waiting');startPoll();if('Notification'in window&&Notification.permission==='default')Notification.requestPermission()}
+var joinParam=params.get('join');
+if(joinParam){sessCode=joinParam.toUpperCase();mode='session';sessSlot='b';sessName='Them';document.getElementById('joinCode').value=sessCode;step=0;drawings=[null,null,null];showScreen('draw');requestAnimationFrame(function(){resizeCanvas();loadStep()})}
+var waitingParam=params.get('waiting');
+if(waitingParam){sessCode=waitingParam.toUpperCase();mode='session';document.getElementById('waitCode').textContent=sessCode;showScreen('waiting');startPoll();if('Notification'in window&&Notification.permission==='default')Notification.requestPermission()}
 })();
 </script>
 </body>
