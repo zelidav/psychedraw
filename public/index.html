@@ -4,210 +4,196 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>PsycheDraw</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#1c1410;--ink2:#4a4036;--ink3:#8a7f78;
   --paper:#f9f5ee;--paper2:#f0e8d8;--paper3:#e4d8c4;
   --napkin:#fffdf7;--accent:#b8441e;--accent2:#8a3014;
-  --sage:#3d6652;--gold:#b8820a;--blue:#2a4a7a;
+  --sage:#3d6652;--gold:#b8820a;
   --border:rgba(28,20,16,0.14);--border2:rgba(28,20,16,0.26);
   --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
 }
-html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);
-  font-family:"DM Sans",sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--paper);transition:opacity .25s,transform .25s}
-.screen.off{opacity:0;transform:translateY(10px);pointer-events:none}
+html{height:100%;height:100dvh}
+body{height:100%;height:100dvh;overflow:hidden;background:var(--paper);color:var(--ink);
+  font-family:"DM Sans",sans-serif;-webkit-tap-highlight-color:transparent;
+  overscroll-behavior:none;position:fixed;width:100%}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;
+  background:var(--paper);transition:opacity .22s,transform .22s;
+  height:100%;height:100dvh}
+.screen.off{opacity:0;transform:translateY(8px);pointer-events:none}
 .topbar{display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;padding-top:max(12px,var(--sat));
+  padding:10px 16px;padding-top:max(10px,var(--sat));
   background:var(--paper);border-bottom:1px solid var(--border2);flex-shrink:0}
-.logo{font-family:"Caveat",cursive;font-size:1.7rem;font-weight:700;color:var(--ink);line-height:1}
+.logo{font-family:"Caveat",cursive;font-size:1.65rem;font-weight:700;color:var(--ink);line-height:1}
 .logo span{color:var(--accent)}
 
 /* HOME */
 #home{overflow-y:auto}
-.hero{text-align:center;padding:1.75rem 1.5rem 1rem}
-.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:.5rem}
-.hero h1{font-family:"Caveat",cursive;font-size:2.8rem;font-weight:700;line-height:1.05;margin-bottom:.5rem}
+.hero{text-align:center;padding:1.5rem 1.25rem .9rem}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:.45rem}
+.hero h1{font-family:"Caveat",cursive;font-size:2.7rem;font-weight:700;line-height:1.05;margin-bottom:.45rem}
 .hero h1 span{color:var(--accent)}
-.hero p{font-size:.95rem;color:var(--ink2);font-weight:300;line-height:1.55;max-width:300px;margin:0 auto}
-.napkin{background:var(--napkin);border-radius:4px;
-  box-shadow:2px 3px 12px rgba(0,0,0,.11),0 0 0 1px rgba(0,0,0,.06);
-  margin:0 1.25rem .9rem;padding:1.1rem 1.2rem;position:relative}
-.napkin::before{content:"";position:absolute;inset:0;border-radius:4px;
+.hero p{font-size:.92rem;color:var(--ink2);font-weight:300;line-height:1.55;max-width:290px;margin:0 auto}
+.napkin{background:var(--napkin);border-radius:6px;
+  box-shadow:2px 3px 12px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.06);
+  margin:0 1.25rem .85rem;padding:1rem 1.15rem;position:relative;overflow:hidden}
+.napkin::before{content:"";position:absolute;inset:0;
   background:repeating-linear-gradient(0deg,transparent,transparent 22px,rgba(0,80,200,.05) 23px);pointer-events:none}
-.napkin-title{font-family:"Caveat",cursive;font-size:1.25rem;font-weight:600;margin-bottom:.4rem}
-.napkin p{font-size:.88rem;color:var(--ink2);line-height:1.6;font-weight:300;position:relative;z-index:1}
-.home-actions{padding:0 1.25rem 2.5rem;display:flex;flex-direction:column;gap:12px}
-.bigbtn{width:100%;padding:17px 16px;border-radius:10px;border:none;
-  font-family:"DM Sans",sans-serif;cursor:pointer;display:flex;align-items:center;gap:14px;
-  text-align:left;transition:transform .1s,box-shadow .1s;
-  box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.bigbtn:active{transform:scale(.97);box-shadow:none}
-.bicon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;
-  justify-content:center;font-size:22px;flex-shrink:0}
-.blabel strong{display:block;font-size:1rem;margin-bottom:3px;color:var(--ink)}
-.blabel span{font-size:.8rem;color:var(--ink3);font-weight:300;line-height:1.4}
-.barrow{margin-left:auto;font-size:1.3rem;color:var(--ink3);padding-left:8px}
+.napkin-title{font-family:"Caveat",cursive;font-size:1.2rem;font-weight:600;margin-bottom:.35rem}
+.napkin p{font-size:.86rem;color:var(--ink2);line-height:1.58;font-weight:300;position:relative;z-index:1}
+.home-actions{padding:0 1.25rem 2.5rem;display:flex;flex-direction:column;gap:10px}
+.bigbtn{width:100%;padding:16px;border-radius:10px;border:none;
+  font-family:"DM Sans",sans-serif;cursor:pointer;display:flex;align-items:center;gap:13px;
+  text-align:left;transition:transform .1s;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.bigbtn:active{transform:scale(.97)}
+.bicon{width:44px;height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.blabel strong{display:block;font-size:.95rem;margin-bottom:2px;color:var(--ink)}
+.blabel span{font-size:.78rem;color:var(--ink3);font-weight:300}
+.barrow{margin-left:auto;font-size:1.2rem;color:var(--ink3);padding-left:6px}
 .bsolo{background:#fef0e6}.bsolo .bicon{background:#fddcc8}
 .bsess{background:#e8f2ec}.bsess .bicon{background:#c8e8d4}
 
-/* DRAW SCREEN */
-#draw{background:#fff;overflow:hidden;height:100%;height:100dvh}
-.draw-top{display:flex;align-items:center;gap:8px;padding:10px 12px;
-  padding-top:max(10px,var(--sat));background:var(--paper2);
+/* DRAW SCREEN — fixed layout so toolbar never gets pushed off */
+#draw{background:#fff;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+.draw-top{display:flex;align-items:center;gap:8px;padding:9px 11px;
+  padding-top:max(9px,var(--sat));background:var(--paper2);
   border-bottom:1px solid var(--border);flex-shrink:0}
-.step-label{font-family:"Caveat",cursive;font-size:1.35rem;font-weight:600;
+.step-label{font-family:"Caveat",cursive;font-size:1.3rem;font-weight:600;
   color:var(--accent);flex:1;text-align:center}
-.step-hint{font-size:.78rem;color:var(--ink3);text-align:center;
-  padding:5px 14px;background:var(--paper2);border-bottom:1px solid var(--border);
-  flex-shrink:0;font-style:italic;line-height:1.4}
-.progress{display:flex;gap:6px;padding:8px 14px;background:var(--paper2);
+.step-hint{font-size:.74rem;color:var(--ink3);text-align:center;
+  padding:4px 12px;background:var(--paper2);border-bottom:1px solid var(--border);
+  flex-shrink:0;font-style:italic;line-height:1.35}
+.progress{display:flex;gap:5px;padding:7px 13px;background:var(--paper2);
   border-bottom:1px solid var(--border);flex-shrink:0}
-.pstep{flex:1;height:5px;border-radius:3px;background:var(--paper3);transition:background .3s}
+.pstep{flex:1;height:4px;border-radius:2px;background:var(--paper3);transition:background .3s}
 .pstep.done{background:var(--accent)}.pstep.cur{background:var(--accent);opacity:.5}
+canvas{display:block;flex:1;min-height:0;width:100%;touch-action:none;
+  background:#fff;cursor:crosshair}
 
-canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crosshair;flex:1;min-height:0;height:0}
-
-/* TOOLBAR */
-.toolbar{display:flex;align-items:center;justify-content:space-between;
-  padding:9px 10px;padding-bottom:max(9px,var(--sab));
-  background:var(--paper2);border-top:1px solid var(--border);flex-shrink:0;gap:6px}
-.tbg{display:flex;gap:5px;align-items:center}
-.tbb{width:40px;height:40px;border-radius:9px;border:1px solid var(--border2);
+/* TOOLBAR — single row, compact */
+.toolbar{display:flex;align-items:center;
+  padding:8px 10px;padding-bottom:max(8px,var(--sab));
+  background:var(--paper2);border-top:1px solid var(--border);flex-shrink:0;gap:5px}
+.tbg{display:flex;gap:4px;align-items:center}
+.tbb{width:38px;height:38px;border-radius:8px;border:1px solid var(--border2);
   background:var(--paper);display:flex;align-items:center;justify-content:center;
   cursor:pointer;color:var(--ink);transition:all .1s;flex-shrink:0}
 .tbb.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .tbb:active{transform:scale(.88)}
-.cdot{width:24px;height:24px;border-radius:50%;border:2.5px solid transparent;
+.cdot{width:22px;height:22px;border-radius:50%;border:2.5px solid transparent;
   cursor:pointer;flex-shrink:0;transition:all .12s}
 .cdot.on{border-color:var(--ink);transform:scale(1.2)}
-.szslider{width:52px;height:3px;-webkit-appearance:none;appearance:none;
-  background:var(--paper3);border-radius:2px;outline:none;cursor:pointer}
-.szslider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;
+.szslider{width:44px;height:3px;-webkit-appearance:none;appearance:none;
+  background:var(--paper3);border-radius:2px;outline:none;cursor:pointer;flex-shrink:0}
+.szslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
   border-radius:50%;background:var(--ink);cursor:pointer}
+/* The one smart button — upload state */
+.smartbtn{display:flex;align-items:center;gap:5px;padding:0 12px;height:38px;
+  border-radius:8px;font-family:"DM Sans",sans-serif;font-size:.8rem;font-weight:500;
+  cursor:pointer;flex-shrink:0;white-space:nowrap;border:none;
+  margin-left:auto;transition:all .15s}
+.smartbtn.upload{background:#fff8f5;color:var(--accent);
+  border:1.5px dashed var(--accent)!important;outline:none}
+.smartbtn.upload:active{background:#feeee5}
+.smartbtn.next{background:var(--accent);color:#fff;border:1.5px solid var(--accent)!important}
+.smartbtn.next:active{background:var(--accent2)}
 
-/* UPLOAD BUTTON — inviting but secondary */
-.upload-btn{display:flex;align-items:center;gap:5px;padding:0 11px;height:40px;
-  border-radius:9px;border:1.5px dashed var(--accent);background:#fff8f5;
-  color:var(--accent);font-family:"DM Sans",sans-serif;font-size:.75rem;font-weight:500;
-  cursor:pointer;flex-shrink:0;transition:all .12s;white-space:nowrap}
-.upload-btn:active{background:#feeee5;transform:scale(.96)}
-.upload-btn svg{flex-shrink:0}
-
-.smart-btn{display:flex;align-items:center;gap:6px;padding:0 14px;height:40px;
-  border-radius:9px;font-family:"DM Sans",sans-serif;font-size:.85rem;font-weight:500;
-  cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap;border:none}
-.smart-btn.upload-state{background:#fff8f5;color:var(--accent);border:1.5px dashed var(--accent)}
-.smart-btn.upload-state:active{background:#feeee5}
-.smart-btn.next-state{background:var(--accent);color:#fff;border:1.5px solid var(--accent)}
-.smart-btn.next-state:active{background:var(--accent2)}
-.upload-icon{flex-shrink:0;transition:opacity .15s}
-
-/* OVERLAY / TRANSITION */
+/* OVERLAY */
 .overlay{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:200;gap:1rem;text-align:center;
+  align-items:center;justify-content:center;z-index:200;gap:.9rem;text-align:center;
   padding:2.5rem;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.show{opacity:1;pointer-events:all}
-.overlay .emoji{font-size:4rem}
-.overlay h2{font-family:"Caveat",cursive;font-size:2.4rem;font-weight:700;color:var(--ink)}
-.overlay p{font-size:.95rem;color:var(--ink2);font-weight:300;line-height:1.55;max-width:280px}
-.taphint{font-size:.8rem;color:var(--ink3);margin-top:.75rem;animation:pulse 1.5s infinite}
+.overlay .ov-emoji{font-size:3.8rem}
+.overlay h2{font-family:"Caveat",cursive;font-size:2.3rem;font-weight:700}
+.overlay p{font-size:.9rem;color:var(--ink2);font-weight:300;line-height:1.5;max-width:270px}
+.taphint{font-size:.76rem;color:var(--ink3);margin-top:.5rem;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 
 /* LOBBY */
 #lobby{overflow-y:auto}
 .lbody{flex:1;display:flex;flex-direction:column;align-items:center;
   justify-content:center;padding:1.5rem;gap:1rem}
-.codebig{font-family:"Caveat",cursive;font-size:3.8rem;font-weight:700;
-  letter-spacing:.14em;color:var(--accent);background:var(--napkin);
-  border-radius:8px;padding:.5rem 1.75rem;border:1px solid var(--border2);
+.codebig{font-family:"Caveat",cursive;font-size:3.6rem;font-weight:700;
+  letter-spacing:.13em;color:var(--accent);background:var(--napkin);
+  border-radius:8px;padding:.45rem 1.5rem;border:1px solid var(--border2);
   box-shadow:2px 3px 10px rgba(0,0,0,.08)}
-.joininput{width:100%;max-width:300px;padding:14px;
+.joininput{width:100%;max-width:300px;padding:13px;
   border:1.5px solid var(--border2);border-radius:9px;
-  font-family:"Caveat",cursive;font-size:2rem;text-align:center;
+  font-family:"Caveat",cursive;font-size:1.9rem;text-align:center;
   letter-spacing:.15em;text-transform:uppercase;
   background:var(--napkin);color:var(--ink);outline:none}
 .joininput:focus{border-color:var(--accent)}
-.statusrow{display:flex;gap:18px;justify-content:center}
-.sdot{display:flex;align-items:center;gap:7px;font-size:.85rem;color:var(--ink3)}
-.sdot-c{width:9px;height:9px;border-radius:50%;background:var(--paper3)}
+.statusrow{display:flex;gap:16px;justify-content:center}
+.sdot{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--ink3)}
+.sdot-c{width:8px;height:8px;border-radius:50%;background:var(--paper3)}
 .sdot-c.on{background:var(--sage)}
 
 /* WAITING */
-#waiting{align-items:center;justify-content:center;gap:1.25rem;text-align:center;padding:2rem}
-.spinner{width:38px;height:38px;border:2.5px solid var(--paper3);
+.spinner{width:36px;height:36px;border:2.5px solid var(--paper3);
   border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* RESULTS & ANALYSIS */
 #results,#analysis{overflow-y:auto}
-.rbody,.abody{padding:1.1rem;max-width:560px;margin:0 auto;
-  padding-bottom:calc(5rem + var(--sab))}
-.rcard{background:var(--napkin);border-radius:8px;
+.rbody,.abody{padding:1rem;max-width:540px;margin:0 auto;
+  padding-bottom:calc(4.5rem + var(--sab))}
+.rcard{background:var(--napkin);border-radius:7px;
   box-shadow:2px 3px 10px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.06);
-  padding:1.1rem 1.2rem;margin-bottom:12px}
-.rlabel{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);font-weight:500;margin-bottom:6px}
-.rcard p{font-size:.88rem;color:var(--ink2);font-weight:300;line-height:1.6}
-.pills{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-.pill{font-size:.75rem;padding:4px 11px;border-radius:100px;font-weight:500}
+  padding:1rem 1.1rem;margin-bottom:11px}
+.rlabel{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;margin-bottom:5px}
+.rcard p{font-size:.86rem;color:var(--ink2);font-weight:300;line-height:1.58}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
+.pill{font-size:.72rem;padding:3px 10px;border-radius:100px;font-weight:500}
 .pw{background:#feeee5;color:#7a2e10}.pc{background:#e5f0ea;color:#235238}
 .pn{background:var(--paper3);color:var(--ink2)}
-.srows{display:flex;flex-direction:column;gap:7px;margin-top:8px}
-.srow{display:flex;align-items:center;gap:8px}
-.slbl{font-size:.75rem;color:var(--ink3);width:70px;flex-shrink:0}
-.sbar{flex:1;height:5px;background:var(--paper3);border-radius:3px;overflow:hidden}
-.sfill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
-.sval{font-size:.75rem;font-weight:500;color:var(--ink2);width:24px;text-align:right}
-
-/* MBTI CARD */
-.mcard{background:var(--napkin);border-radius:8px;
+.srows{display:flex;flex-direction:column;gap:6px;margin-top:7px}
+.srow{display:flex;align-items:center;gap:7px}
+.slbl{font-size:.72rem;color:var(--ink3);width:66px;flex-shrink:0}
+.sbar{flex:1;height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
+.sfill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.sval{font-size:.72rem;font-weight:500;color:var(--ink2);width:22px;text-align:right}
+.mcard{background:var(--napkin);border-radius:7px;
   box-shadow:2px 3px 10px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.06);
-  padding:1.1rem 1.2rem;margin-bottom:12px;position:relative;overflow:hidden}
+  padding:1rem 1.1rem;margin-bottom:11px;position:relative;overflow:hidden}
 .mcard::before{content:"";position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 21px,rgba(0,80,200,.04) 22px);
+  background:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(0,80,200,.04) 21px);
   pointer-events:none}
-.mtype{font-family:"Caveat",cursive;font-size:3.2rem;font-weight:700;
+.mtype{font-family:"Caveat",cursive;font-size:3rem;font-weight:700;
   color:var(--accent);line-height:1;margin-bottom:.2rem;position:relative;z-index:1}
-.mdims{font-size:.8rem;color:var(--ink3);margin-bottom:6px;position:relative;z-index:1}
-.mbars{display:flex;flex-direction:column;gap:8px;margin:10px 0;position:relative;z-index:1}
-.mrow{display:flex;align-items:center;gap:8px}
-.mL{font-size:.75rem;color:var(--ink3);width:14px;text-align:right;flex-shrink:0}
-.mR{font-size:.75rem;color:var(--ink3);width:14px;flex-shrink:0}
-.mtrack{flex:1;height:7px;background:var(--paper3);border-radius:4px;overflow:hidden}
-.mfill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
-.msketch{font-size:.85rem;color:var(--ink2);font-style:italic;line-height:1.55;
-  font-weight:300;position:relative;z-index:1;margin-top:.5rem}
-
-/* COMPAT HERO */
-.chero{text-align:center;padding:1.25rem 0 1.5rem}
-.cscore{font-family:"Caveat",cursive;font-size:5.5rem;font-weight:700;line-height:1}
-.clbl{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:4px}
-.cchem{font-family:"Caveat",cursive;font-size:1.15rem;color:var(--ink2);
-  margin-top:.6rem;padding:0 1rem;line-height:1.4}
-.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mdims{font-size:.76rem;color:var(--ink3);margin-bottom:5px;position:relative;z-index:1}
+.mbars{display:flex;flex-direction:column;gap:7px;margin:9px 0;position:relative;z-index:1}
+.mrow{display:flex;align-items:center;gap:7px}
+.mL{font-size:.72rem;color:var(--ink3);width:13px;text-align:right;flex-shrink:0}
+.mR{font-size:.72rem;color:var(--ink3);width:13px;flex-shrink:0}
+.mtrack{flex:1;height:6px;background:var(--paper3);border-radius:3px;overflow:hidden}
+.mfill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.msketch{font-size:.82rem;color:var(--ink2);font-style:italic;line-height:1.52;
+  font-weight:300;position:relative;z-index:1;margin-top:.4rem}
+.chero{text-align:center;padding:1.1rem 0 1.3rem}
+.cscore{font-family:"Caveat",cursive;font-size:5.2rem;font-weight:700;line-height:1}
+.clbl{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:3px}
+.cchem{font-family:"Caveat",cursive;font-size:1.1rem;color:var(--ink2);
+  margin-top:.5rem;padding:0 1rem;line-height:1.4}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 @media(max-width:380px){.twocol{grid-template-columns:1fr}}
-
-.sharefab{position:fixed;bottom:calc(1.25rem + var(--sab));right:1.25rem;
-  width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;
+.sharefab{position:fixed;bottom:calc(1.1rem + var(--sab));right:1.1rem;
+  width:50px;height:50px;border-radius:50%;background:var(--ink);color:#fff;
   border:none;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 18px rgba(0,0,0,.22);cursor:pointer;font-size:20px;z-index:50}
+  box-shadow:0 4px 18px rgba(0,0,0,.22);cursor:pointer;z-index:50}
 .sharefab:active{transform:scale(.9)}
-
-/* SHARED BUTTONS */
-.btn{width:100%;padding:15px;border-radius:9px;border:none;
-  font-family:"DM Sans",sans-serif;font-size:.95rem;font-weight:500;
+.btn{width:100%;padding:14px;border-radius:9px;border:none;
+  font-family:"DM Sans",sans-serif;font-size:.92rem;font-weight:500;
   cursor:pointer;transition:all .12s;display:flex;align-items:center;
   justify-content:center;gap:8px;max-width:320px}
 .btnP{background:var(--accent);color:#fff}.btnP:active{background:var(--accent2)}
 .btnS{background:var(--paper2);color:var(--ink);border:1px solid var(--border2)}
 .btnS:active{background:var(--paper3)}
-.btnG{background:none;border:none;color:var(--ink3);font-size:.85rem;
-  padding:8px 10px;cursor:pointer;font-family:"DM Sans",sans-serif}
-
+.btnG{background:none;border:none;color:var(--ink3);font-size:.82rem;padding:8px 10px;cursor:pointer;font-family:"DM Sans",sans-serif}
 .dots{display:flex;gap:5px;align-items:center;justify-content:center}
 .dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:dot 1.2s infinite}
 .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
@@ -217,19 +203,18 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 </head>
 <body>
 
-<!-- STEP TRANSITION OVERLAY -->
 <div class="overlay" id="overlay">
-  <div class="emoji" id="ovEmoji"></div>
+  <div class="ov-emoji" id="ovEmoji"></div>
   <h2 id="ovTitle"></h2>
   <p id="ovDesc"></p>
-  <div class="taphint">tap anywhere to start drawing</div>
+  <div class="taphint">tap anywhere to draw</div>
 </div>
 
 <!-- HOME -->
 <div class="screen" id="home">
   <div class="topbar">
     <div class="logo">Psyche<span>Draw</span></div>
-    <div style="font-size:.78rem;color:var(--ink3);font-weight:300">HTP &middot; MBTI</div>
+    <div style="font-size:.74rem;color:var(--ink3);font-weight:300">HTP &middot; MBTI</div>
   </div>
   <div style="flex:1;overflow-y:auto">
     <div class="hero">
@@ -263,20 +248,21 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
     <div class="step-label" id="stepLabel">Draw your house</div>
     <button class="tbb" id="btnUndo" style="width:36px;height:36px;font-size:14px">&#8617;</button>
   </div>
-  <div class="progress" id="progress">
+  <div class="progress">
     <div class="pstep cur" id="ps0"></div>
     <div class="pstep" id="ps1"></div>
     <div class="pstep" id="ps2"></div>
   </div>
-  <div class="step-hint" id="stepHint">Draw anything that feels right &#8212; no artistic talent required!</div>
+  <div class="step-hint" id="stepHint">Draw anything &#8212; no artistic talent required!</div>
   <canvas id="c"></canvas>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
   <div class="toolbar">
     <div class="tbg">
       <button class="tbb on" id="btnPen">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4z"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4z"/></svg>
       </button>
       <button class="tbb" id="btnEraser">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 20H7L3 16l11-11 6 6-2.5 2.5"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 20H7L3 16l11-11 6 6-2.5 2.5"/></svg>
       </button>
     </div>
     <div class="tbg" id="colorRow">
@@ -287,10 +273,9 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
       <div class="cdot" data-color="#b8820a" style="background:#b8820a"></div>
     </div>
     <input type="range" class="szslider" id="brushSize" min="1" max="22" value="3">
-    <input type="file" id="fileInput" accept="image/*" style="display:none">
-    <button class="smart-btn upload-state" id="btnSmart">
-      <svg class="upload-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      <span class="smart-label">Upload photo</span>
+    <button class="smartbtn upload" id="btnSmart">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span id="smartLabel">Upload</span>
     </button>
   </div>
 </div>
@@ -299,28 +284,28 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 <div class="screen off" id="lobby">
   <div class="topbar">
     <button class="btnG" id="btnLobbyBack">&#8249; Back</button>
-    <div class="logo" style="font-size:1.2rem">Draw Together</div>
-    <div style="width:60px"></div>
+    <div class="logo" style="font-size:1.15rem">Draw Together</div>
+    <div style="width:56px"></div>
   </div>
   <div class="lbody">
-    <div id="lobbyCreate" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+    <div id="lobbyCreate" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center">
       <div class="napkin" style="margin:0;width:100%;text-align:left">
         <div class="napkin-title">&#127864; Bar Rules</div>
-        <p>Create a session and share the code. Each person draws on their own phone. When both are done the AI tells you how compatible you are.</p>
+        <p>Create a session and share the code. Each person draws on their own phone. When both finish the AI tells you how compatible you are.</p>
       </div>
       <button class="btn btnP" id="btnCreate">Create Session</button>
-      <div style="display:flex;align-items:center;gap:10px;width:100%">
+      <div style="display:flex;align-items:center;gap:9px;width:100%">
         <div style="flex:1;height:1px;background:var(--border2)"></div>
-        <span style="font-size:.78rem;color:var(--ink3)">or join one</span>
+        <span style="font-size:.76rem;color:var(--ink3)">or join one</span>
         <div style="flex:1;height:1px;background:var(--border2)"></div>
       </div>
       <input class="joininput" id="joinCode" placeholder="ABC123" maxlength="6">
       <button class="btn btnS" id="btnJoin">Join Session</button>
     </div>
-    <div id="lobbyWaiting" class="off" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center">
-      <p style="font-size:.85rem;color:var(--ink3)">Session code</p>
+    <div id="lobbyWaiting" class="off" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center">
+      <p style="font-size:.82rem;color:var(--ink3)">Session code</p>
       <div class="codebig" id="codeDisplay"></div>
-      <button class="btn btnS" id="btnShareCode" style="max-width:220px">Share Code &#8599;</button>
+      <button class="btn btnS" id="btnShareCode" style="max-width:210px">Share Code &#8599;</button>
       <div class="statusrow">
         <div class="sdot"><div class="sdot-c on"></div><span id="slabelA">You</span></div>
         <div class="sdot"><div class="sdot-c" id="sdotB"></div><span id="slabelB">Them (waiting)</span></div>
@@ -333,25 +318,25 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 <!-- WAITING -->
 <div class="screen off" id="waiting">
   <div class="topbar"><div class="logo">Waiting&#8230;</div></div>
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;text-align:center;padding:2rem">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.3rem;text-align:center;padding:2rem">
     <div class="spinner"></div>
-    <div style="font-family:Caveat,cursive;font-size:2rem;font-weight:700">Drawing submitted &#10003;</div>
-    <p style="font-size:.9rem;color:var(--ink2);font-weight:300;max-width:260px;line-height:1.5">Waiting for the other person to finish their drawings&#8230;</p>
-    <button class="btn btnS" id="btnCheckNow" style="margin-top:.25rem;max-width:200px">Check now</button>
+    <div style="font-family:Caveat,cursive;font-size:1.9rem;font-weight:700">Submitted &#10003;</div>
+    <p style="font-size:.88rem;color:var(--ink2);font-weight:300;max-width:260px;line-height:1.5">Waiting for the other person to finish&#8230;</p>
+    <button class="btn btnS" id="btnCheckNow" style="max-width:200px">Check now</button>
   </div>
 </div>
 
 <!-- ANALYSIS -->
 <div class="screen off" id="analysis">
   <div class="topbar">
-    <button class="tbb" id="btnAnalysisHome" style="width:36px;height:36px;font-size:18px">&#8962;</button>
-    <div class="logo" style="font-size:1.2rem">Your Reading</div>
+    <button class="tbb" id="btnAnalysisHome" style="width:36px;height:36px;font-size:17px">&#8962;</button>
+    <div class="logo" style="font-size:1.15rem">Your Reading</div>
     <div style="width:36px"></div>
   </div>
   <div class="abody" id="analysisBody">
     <div style="text-align:center;padding-top:3.5rem">
       <div class="dots"><span></span><span></span><span></span></div>
-      <p style="margin-top:1.1rem;font-size:.9rem;color:var(--ink3)">Reading your drawings&#8230;</p>
+      <p style="margin-top:1rem;font-size:.88rem;color:var(--ink3)">Reading your drawings&#8230;</p>
     </div>
   </div>
 </div>
@@ -359,328 +344,358 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 <!-- RESULTS -->
 <div class="screen off" id="results">
   <div class="topbar">
-    <button class="tbb" id="btnResultsHome" style="width:36px;height:36px;font-size:18px">&#8962;</button>
-    <div class="logo" style="font-size:1.2rem">Compatibility</div>
+    <button class="tbb" id="btnResultsHome" style="width:36px;height:36px;font-size:17px">&#8962;</button>
+    <div class="logo" style="font-size:1.15rem">Compatibility</div>
     <div style="width:36px"></div>
   </div>
   <div class="rbody" id="resultsBody"></div>
   <button class="sharefab" id="btnShare">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
   </button>
 </div>
 
 <script>
 (function() {
   var STEPS = [
-    {label:"Draw your house 🏠", hint:"Think home, shelter, safety — any style, any size.", emoji:"🏠", title:"House", desc:"Draw any house. Big, small, cozy, falling apart — whatever comes first."},
-    {label:"Now a tree 🌳", hint:"Just a tree. Bare, lush, ancient, tiny — your call.", emoji:"🌳", title:"Tree", desc:"Your tree can be anything you like. No wrong answers."},
-    {label:"Finally, a person 🧑", hint:"Draw a whole person. Stick figure is completely fine.", emoji:"🧑", title:"Person", desc:"Last one! Draw a person — you, someone else, anyone at all."}
+    {label:"Draw your house 🏠",hint:"Think home, shelter, safety — any style, any size.",emoji:"🏠",title:"House",desc:"Draw any house. Big, small, cozy, falling apart — whatever comes first."},
+    {label:"Now a tree 🌳",hint:"Just a tree. Bare, lush, ancient, tiny — your call.",emoji:"🌳",title:"Tree",desc:"Your tree can be anything. No wrong answers."},
+    {label:"Finally, a person 🧑",hint:"Draw a whole person. Stick figure is totally fine.",emoji:"🧑",title:"Person",desc:"Last one! Draw a person — you, someone else, anyone."}
   ];
-  var SC = {openness:"#6b4c8a",structure:"#3d6652",energy:"#b8441e",social:"#b8820a",creativity:"#2a4a7a"};
+  var SCORES_COLORS = {openness:"#6b4c8a",structure:"#3d6652",energy:"#b8441e",social:"#b8820a",creativity:"#2a4a7a"};
 
-  var step=0, drawings=[], tool="pen", color="#1c1410", sz=3;
+  var step=0, drawings=[], tool="pen", penColor="#1c1410", brushSz=3;
   var isDrawing=false, lx=0, ly=0, history=[], hasDrawn=false;
   var pressures=[], peakP=0;
   var mode="solo", sessCode="", sessSlot="a", sessName="";
   var pollTimer=null, transTarget=0;
 
-  var canvas=document.getElementById("c");
-  var ctx=canvas.getContext("2d");
-  ctx.lineCap="round"; ctx.lineJoin="round";
+  var canvas = document.getElementById("c");
+  var ctx = canvas.getContext("2d");
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
 
-  function show(id) {
-    document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("off", s.id!==id); });
-    if(id==="draw") setTimeout(resizeCanvas, 40);
+  // Prevent pinch zoom and document bounce
+  document.addEventListener("gesturestart", function(e){ e.preventDefault(); }, {passive:false});
+  document.addEventListener("gesturechange", function(e){ e.preventDefault(); }, {passive:false});
+  document.addEventListener("gestureend", function(e){ e.preventDefault(); }, {passive:false});
+  document.addEventListener("touchmove", function(e){ if(e.touches.length > 1) e.preventDefault(); }, {passive:false});
+
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("off", s.id !== id); });
+    if (id === "draw") setTimeout(resizeCanvas, 40);
   }
 
   function resizeCanvas() {
-    var dpr=window.devicePixelRatio||1, r=canvas.getBoundingClientRect();
-    if(r.width===0) return;
+    var dpr = window.devicePixelRatio || 1;
+    var r = canvas.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return;
     var prev = history.length ? history[history.length-1] : null;
-    canvas.width=r.width*dpr; canvas.height=r.height*dpr;
-    ctx.scale(dpr,dpr); ctx.lineCap="round"; ctx.lineJoin="round";
-    if(prev){ var img=new Image(); img.src=prev;
-      img.onload=function(){ var r2=canvas.getBoundingClientRect(); ctx.drawImage(img,0,0,r2.width,r2.height); }; }
+    canvas.width = r.width * dpr;
+    canvas.height = r.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    if (prev) {
+      var img = new Image();
+      img.onload = function() {
+        var r2 = canvas.getBoundingClientRect();
+        ctx.drawImage(img, 0, 0, r2.width, r2.height);
+      };
+      img.src = prev;
+    }
   }
 
   function getXY(e) {
-    var r=canvas.getBoundingClientRect(), src=e.touches?e.touches[0]:e;
-    return {x:src.clientX-r.left, y:src.clientY-r.top};
+    var r = canvas.getBoundingClientRect();
+    var src = e.touches ? e.touches[0] : e;
+    return {x: src.clientX - r.left, y: src.clientY - r.top};
   }
 
   function saveHistory() {
-    var r=canvas.getBoundingClientRect();
-    var off=document.createElement("canvas"); off.width=r.width; off.height=r.height;
-    off.getContext("2d").drawImage(canvas,0,0,canvas.width,canvas.height,0,0,r.width,r.height);
-    history.push(off.toDataURL("image/jpeg",.82));
-    if(history.length>25) history.shift();
+    var r = canvas.getBoundingClientRect();
+    var off = document.createElement("canvas");
+    off.width = r.width; off.height = r.height;
+    off.getContext("2d").drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, r.width, r.height);
+    history.push(off.toDataURL("image/jpeg", .82));
+    if (history.length > 25) history.shift();
   }
 
-  canvas.addEventListener("touchstart", function(e){ e.preventDefault();
-    isDrawing=true; hasDrawn=true; switchToNext(); var p=getXY(e); lx=p.x; ly=p.y;
-    if(e.touches[0].force>0){ pressures.push(e.touches[0].force); if(e.touches[0].force>peakP) peakP=e.touches[0].force; }
-    ctx.beginPath(); ctx.arc(lx,ly,(tool==="eraser"?sz*3.5:sz)/2,0,Math.PI*2);
-    ctx.fillStyle=tool==="eraser"?"#fff":color; ctx.fill();
-  },{passive:false});
+  function onFirstDraw() {
+    if (hasDrawn) return;
+    hasDrawn = true;
+    // Flip smart button from Upload to Next
+    var btn = document.getElementById("btnSmart");
+    var lbl = document.getElementById("smartLabel");
+    btn.classList.remove("upload");
+    btn.classList.add("next");
+    btn.querySelector("svg").style.display = "none";
+    lbl.textContent = step < 2 ? "Next →" : "Done ✓";
+  }
 
-  canvas.addEventListener("touchmove", function(e){ if(!isDrawing) return; e.preventDefault();
-    var p=getXY(e);
-    if(e.touches[0].force>0){ pressures.push(e.touches[0].force); if(e.touches[0].force>peakP) peakP=e.touches[0].force; }
-    ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p.x,p.y);
-    ctx.strokeStyle=tool==="eraser"?"#fff":color; ctx.lineWidth=tool==="eraser"?sz*3.5:sz; ctx.stroke();
-    lx=p.x; ly=p.y;
-  },{passive:false});
+  canvas.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    isDrawing = true; onFirstDraw();
+    var p = getXY(e); lx = p.x; ly = p.y;
+    if (e.touches[0].force > 0) { pressures.push(e.touches[0].force); if (e.touches[0].force > peakP) peakP = e.touches[0].force; }
+    ctx.beginPath(); ctx.arc(lx, ly, (tool==="eraser" ? brushSz*3.5 : brushSz)/2, 0, Math.PI*2);
+    ctx.fillStyle = tool==="eraser" ? "#fff" : penColor; ctx.fill();
+  }, {passive:false});
 
-  canvas.addEventListener("touchend", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
-  canvas.addEventListener("mousedown", function(e){
-    isDrawing=true; hasDrawn=true; switchToNext(); var p=getXY(e); lx=p.x; ly=p.y;
-    ctx.beginPath(); ctx.arc(lx,ly,(tool==="eraser"?sz*3.5:sz)/2,0,Math.PI*2);
-    ctx.fillStyle=tool==="eraser"?"#fff":color; ctx.fill();
+  canvas.addEventListener("touchmove", function(e) {
+    if (!isDrawing) return; e.preventDefault();
+    var p = getXY(e);
+    if (e.touches[0].force > 0) { pressures.push(e.touches[0].force); if (e.touches[0].force > peakP) peakP = e.touches[0].force; }
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = tool==="eraser" ? "#fff" : penColor;
+    ctx.lineWidth = tool==="eraser" ? brushSz*3.5 : brushSz; ctx.stroke();
+    lx = p.x; ly = p.y;
+  }, {passive:false});
+
+  canvas.addEventListener("touchend", function() { if (isDrawing) { isDrawing=false; saveHistory(); } });
+
+  canvas.addEventListener("mousedown", function(e) {
+    isDrawing = true; onFirstDraw();
+    var p = getXY(e); lx = p.x; ly = p.y;
+    ctx.beginPath(); ctx.arc(lx, ly, (tool==="eraser" ? brushSz*3.5 : brushSz)/2, 0, Math.PI*2);
+    ctx.fillStyle = tool==="eraser" ? "#fff" : penColor; ctx.fill();
   });
-  canvas.addEventListener("mousemove", function(e){ if(!isDrawing) return;
-    var p=getXY(e); ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p.x,p.y);
-    ctx.strokeStyle=tool==="eraser"?"#fff":color; ctx.lineWidth=tool==="eraser"?sz*3.5:sz; ctx.stroke();
-    lx=p.x; ly=p.y;
+  canvas.addEventListener("mousemove", function(e) {
+    if (!isDrawing) return;
+    var p = getXY(e);
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = tool==="eraser" ? "#fff" : penColor;
+    ctx.lineWidth = tool==="eraser" ? brushSz*3.5 : brushSz; ctx.stroke();
+    lx = p.x; ly = p.y;
   });
-  canvas.addEventListener("mouseup", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
-  canvas.addEventListener("mouseleave", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
+  canvas.addEventListener("mouseup", function() { if (isDrawing) { isDrawing=false; saveHistory(); } });
+  canvas.addEventListener("mouseleave", function() { if (isDrawing) { isDrawing=false; saveHistory(); } });
 
-  function switchToNext() {
-    var sb = document.getElementById("btnSmart");
-    if(!sb) return;
-    if(sb.classList.contains("upload-state")){
-      sb.classList.remove("upload-state"); sb.classList.add("next-state");
-      var lbl = step < 2 ? "Next →" : "Done ✓";
-      sb.innerHTML = '<span class="smart-label">'+lbl+'</span>';
+  function resetStep(s) {
+    step = s; hasDrawn = false; history = [];
+    document.getElementById("stepLabel").textContent = STEPS[s].label;
+    document.getElementById("stepHint").textContent = STEPS[s].hint;
+    for (var i=0; i<3; i++) {
+      document.getElementById("ps"+i).className = "pstep" + (i<s?" done":i===s?" cur":"");
     }
-  }
-  function resetSmartBtn(s) {
-    var sb = document.getElementById("btnSmart");
-    if(!sb) return;
-    sb.classList.remove("next-state"); sb.classList.add("upload-state");
-    sb.innerHTML = '<svg class="upload-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="smart-label">Upload photo</span>';
-  }
-  function initStep(s) {
-    step=s; hasDrawn=false; history=[]; resetSmartBtn(s);
-    document.getElementById("stepLabel").textContent=STEPS[s].label;
-    document.getElementById("stepHint").textContent=STEPS[s].hint;
-    document.getElementById("btnNext").textContent=s<2?"Next →":"Done ✓";
-    for(var i=0;i<3;i++){
-      var el=document.getElementById("ps"+i);
-      el.className="pstep"+(i<s?" done":i===s?" cur":"");
-    }
-    setTimeout(function(){ ctx.clearRect(0,0,canvas.width,canvas.height); }, 10);
+    // Reset smart button to Upload state
+    var btn = document.getElementById("btnSmart");
+    var lbl = document.getElementById("smartLabel");
+    btn.classList.remove("next"); btn.classList.add("upload");
+    btn.querySelector("svg").style.display = "";
+    lbl.textContent = "Upload";
+    setTimeout(function() { ctx.clearRect(0, 0, canvas.width, canvas.height); }, 10);
   }
 
   function showOverlay(s) {
-    transTarget=s;
-    document.getElementById("ovEmoji").textContent=STEPS[s].emoji;
-    document.getElementById("ovTitle").textContent=STEPS[s].title;
-    document.getElementById("ovDesc").textContent=STEPS[s].desc;
+    transTarget = s;
+    document.getElementById("ovEmoji").textContent = STEPS[s].emoji;
+    document.getElementById("ovTitle").textContent = STEPS[s].title;
+    document.getElementById("ovDesc").textContent = STEPS[s].desc;
     document.getElementById("overlay").classList.add("show");
   }
 
-  document.getElementById("overlay").addEventListener("click", function(){
+  document.getElementById("overlay").addEventListener("click", function() {
     document.getElementById("overlay").classList.remove("show");
-    initStep(transTarget);
+    resetStep(transTarget);
   });
 
   function captureStep() {
-    var r=canvas.getBoundingClientRect();
-    var off=document.createElement("canvas"); off.width=r.width*2; off.height=r.height*2;
-    var ox=off.getContext("2d"); ox.fillStyle="#fff"; ox.fillRect(0,0,off.width,off.height);
-    if(hasDrawn) ox.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,off.width,off.height);
-    drawings[step]=off.toDataURL("image/jpeg",.85).split(",")[1];
+    var r = canvas.getBoundingClientRect();
+    var off = document.createElement("canvas");
+    off.width = r.width*2; off.height = r.height*2;
+    var ox = off.getContext("2d");
+    ox.fillStyle = "#fff"; ox.fillRect(0, 0, off.width, off.height);
+    if (hasDrawn) ox.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, off.width, off.height);
+    drawings[step] = off.toDataURL("image/jpeg", .85).split(",")[1];
   }
 
-  document.getElementById("btnNext").addEventListener("click", function(){
-    if(!hasDrawn){ if(!confirm("Nothing drawn yet — skip this step?")) return; }
+  function doNext() {
+    if (!hasDrawn) { if (!confirm("Nothing drawn yet — skip this step?")) return; }
     captureStep();
-    if(step<2){ showOverlay(step+1); }
+    if (step < 2) { showOverlay(step+1); }
     else { submitAll(); }
+  }
+
+  // Smart button: upload OR next depending on state
+  document.getElementById("btnSmart").addEventListener("click", function() {
+    var btn = document.getElementById("btnSmart");
+    if (btn.classList.contains("upload")) {
+      document.getElementById("fileInput").click();
+    } else {
+      doNext();
+    }
   });
 
-  document.getElementById("btnBack").addEventListener("click", function(){
-    if(step>0){ showOverlay(step-1); }
-    else { show("home"); }
+  document.getElementById("fileInput").addEventListener("change", function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        setTimeout(function() {
+          var r = canvas.getBoundingClientRect();
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, r.width, r.height);
+          var sc = Math.min(r.width/img.width, r.height/img.height);
+          var w = img.width*sc, h = img.height*sc;
+          ctx.drawImage(img, (r.width-w)/2, (r.height-h)/2, w, h);
+          onFirstDraw(); saveHistory(); captureStep();
+        }, 60);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
   });
 
-  document.getElementById("btnUndo").addEventListener("click", function(){
-    if(history.length<2) return; history.pop();
-    var img=new Image(), r=canvas.getBoundingClientRect();
-    img.src=history[history.length-1];
-    img.onload=function(){ ctx.clearRect(0,0,r.width,r.height); ctx.drawImage(img,0,0,r.width,r.height); };
+  document.getElementById("btnBack").addEventListener("click", function() {
+    if (step > 0) { showOverlay(step-1); } else { showScreen("home"); }
   });
 
-  document.getElementById("btnPen").addEventListener("click", function(){
-    tool="pen";
+  document.getElementById("btnUndo").addEventListener("click", function() {
+    if (history.length < 2) return;
+    history.pop();
+    var img = new Image(), r = canvas.getBoundingClientRect();
+    img.src = history[history.length-1];
+    img.onload = function() { ctx.clearRect(0,0,r.width,r.height); ctx.drawImage(img,0,0,r.width,r.height); };
+  });
+
+  document.getElementById("btnPen").addEventListener("click", function() {
+    tool = "pen";
     document.getElementById("btnPen").classList.add("on");
     document.getElementById("btnEraser").classList.remove("on");
   });
 
-  document.getElementById("btnEraser").addEventListener("click", function(){
-    tool="eraser";
+  document.getElementById("btnEraser").addEventListener("click", function() {
+    tool = "eraser";
     document.getElementById("btnEraser").classList.add("on");
     document.getElementById("btnPen").classList.remove("on");
   });
 
-  document.getElementById("colorRow").addEventListener("click", function(e){
-    var dot=e.target.closest(".cdot"); if(!dot) return;
-    color=dot.dataset.color; tool="pen";
+  document.getElementById("colorRow").addEventListener("click", function(e) {
+    var dot = e.target.closest(".cdot"); if (!dot) return;
+    penColor = dot.dataset.color; tool = "pen";
     document.querySelectorAll(".cdot").forEach(function(d){ d.classList.remove("on"); });
     dot.classList.add("on");
     document.getElementById("btnPen").classList.add("on");
     document.getElementById("btnEraser").classList.remove("on");
   });
 
-  document.getElementById("brushSize").addEventListener("input", function(){ sz=+this.value; });
+  document.getElementById("brushSize").addEventListener("input", function() { brushSz = +this.value; });
 
-  var smartBtn = document.getElementById("btnSmart");
-  smartBtn.addEventListener("click", function(){
-    if(smartBtn.classList.contains("upload-state")){
-      document.getElementById("fileInput").click();
-    } else {
-      // act as Next
-      if(!hasDrawn){ if(!confirm("Nothing drawn yet \u2014 skip this step?")) return; }
-      captureStep();
-      if(step<2){ showOverlay(step+1); }
-      else { submitAll(); }
-    }
+  document.getElementById("btnSolo").addEventListener("click", function() {
+    mode = "solo"; drawings = []; pressures = []; peakP = 0;
+    showScreen("draw"); resetStep(0);
   });
 
-  document.getElementById("fileInput").addEventListener("change", function(e){
-    var file=e.target.files[0]; if(!file) return;
-    var reader=new FileReader();
-    reader.onload=function(ev){
-      var img=new Image(); img.onload=function(){
-        setTimeout(function(){
-          var r=canvas.getBoundingClientRect();
-          ctx.fillStyle="#fff"; ctx.fillRect(0,0,r.width,r.height);
-          var sc=Math.min(r.width/img.width,r.height/img.height);
-          var w=img.width*sc, h=img.height*sc;
-          ctx.drawImage(img,(r.width-w)/2,(r.height-h)/2,w,h);
-          hasDrawn=true; switchToNext(); saveHistory(); captureStep();
-        }, 60);
-      }; img.src=ev.target.result;
-    }; reader.readAsDataURL(file);
-    e.target.value="";
-  });
-
-  document.getElementById("btnSolo").addEventListener("click", function(){
-    mode="solo"; drawings=[]; pressures=[]; peakP=0;
-    show("draw"); initStep(0);
-  });
-
-  document.getElementById("btnSession").addEventListener("click", function(){
+  document.getElementById("btnSession").addEventListener("click", function() {
     document.getElementById("lobbyCreate").classList.remove("off");
     document.getElementById("lobbyWaiting").classList.add("off");
-    show("lobby");
+    showScreen("lobby");
   });
 
-  document.getElementById("btnLobbyBack").addEventListener("click", function(){ show("home"); });
+  document.getElementById("btnLobbyBack").addEventListener("click", function() { showScreen("home"); });
 
-  document.getElementById("btnCreate").addEventListener("click", function(){
-    fetch("/api/session/create",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})
-    .then(function(r){ return r.json(); }).then(function(d){
-      sessCode=d.code; sessSlot="a";
-      sessName=window.prompt("Your name for the session:") || "Person A";
-      document.getElementById("codeDisplay").textContent=sessCode;
+  document.getElementById("btnCreate").addEventListener("click", function() {
+    fetch("/api/session/create", {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"})
+    .then(function(r){ return r.json(); }).then(function(d) {
+      sessCode = d.code; sessSlot = "a";
+      sessName = window.prompt("Your name:") || "Person A";
+      document.getElementById("codeDisplay").textContent = sessCode;
       document.getElementById("lobbyCreate").classList.add("off");
       document.getElementById("lobbyWaiting").classList.remove("off");
     });
   });
 
-  document.getElementById("btnJoin").addEventListener("click", function(){
-    var code=document.getElementById("joinCode").value.trim().toUpperCase();
-    if(code.length!==6){ alert("Enter the 6-character code"); return; }
-    fetch("/api/session/"+code).then(function(r){
-      if(!r.ok){ alert("Session not found — check the code"); return null; }
+  document.getElementById("btnJoin").addEventListener("click", function() {
+    var code = document.getElementById("joinCode").value.trim().toUpperCase();
+    if (code.length !== 6) { alert("Enter the 6-character code"); return; }
+    fetch("/api/session/"+code).then(function(r) {
+      if (!r.ok) { alert("Session not found — check the code"); return null; }
       return r.json();
-    }).then(function(d){
-      if(!d) return;
-      sessCode=code; sessSlot="b";
-      sessName=window.prompt("Your name:") || "Person B";
-      mode="session"; drawings=[]; pressures=[]; peakP=0;
-      show("draw"); initStep(0);
+    }).then(function(d) {
+      if (!d) return;
+      sessCode = code; sessSlot = "b";
+      sessName = window.prompt("Your name:") || "Person B";
+      mode = "session"; drawings = []; pressures = []; peakP = 0;
+      showScreen("draw"); resetStep(0);
     });
   });
 
-  document.getElementById("joinCode").addEventListener("input", function(){ this.value=this.value.toUpperCase(); });
+  document.getElementById("joinCode").addEventListener("input", function() { this.value = this.value.toUpperCase(); });
 
-  document.getElementById("btnShareCode").addEventListener("click", function(){
-    var url=window.location.origin+"?join="+sessCode;
-    if(navigator.share) navigator.share({title:"Join my PsycheDraw session",text:"Code: "+sessCode,url:url});
+  document.getElementById("btnShareCode").addEventListener("click", function() {
+    var url = window.location.origin + "?join=" + sessCode;
+    if (navigator.share) navigator.share({title:"Join my PsycheDraw session", text:"Code: "+sessCode, url:url});
     else navigator.clipboard.writeText(url).then(function(){ alert("Link copied!"); });
   });
 
-  document.getElementById("btnStartDraw").addEventListener("click", function(){
-    mode="session"; drawings=[]; pressures=[]; peakP=0;
-    show("draw"); initStep(0);
+  document.getElementById("btnStartDraw").addEventListener("click", function() {
+    mode = "session"; drawings = []; pressures = []; peakP = 0;
+    showScreen("draw"); resetStep(0);
   });
 
-  document.getElementById("btnCheckNow").addEventListener("click", function(){ checkAndAnalyze(true); });
-  document.getElementById("btnAnalysisHome").addEventListener("click", function(){ show("home"); });
-  document.getElementById("btnResultsHome").addEventListener("click", function(){ show("home"); });
-  document.getElementById("btnShare").addEventListener("click", function(){
-    if(navigator.share) navigator.share({title:"My PsycheDraw Reading",url:window.location.href});
+  document.getElementById("btnCheckNow").addEventListener("click", function() { checkAndAnalyze(true); });
+  document.getElementById("btnAnalysisHome").addEventListener("click", function() { showScreen("home"); });
+  document.getElementById("btnResultsHome").addEventListener("click", function() { showScreen("home"); });
+  document.getElementById("btnShare").addEventListener("click", function() {
+    if (navigator.share) navigator.share({title:"My PsycheDraw Reading", url:window.location.href});
     else navigator.clipboard.writeText(window.location.href).then(function(){ alert("Link copied!"); });
   });
 
   function submitAll() {
-    var pressureData=pressures.length>0?{
-      avg:pressures.reduce(function(a,b){return a+b;},0)/pressures.length,
-      peak:peakP,
-      lightPct:Math.round(pressures.filter(function(p){return p<0.3;}).length/pressures.length*100)
-    }:null;
-    if(mode==="solo"){
-      show("analysis");
-      document.getElementById("analysisBody").innerHTML='<div style="text-align:center;padding-top:3.5rem"><div class="dots"><span></span><span></span><span></span></div><p style="margin-top:1.1rem;font-size:.9rem;color:var(--ink3)">Reading your drawings…</p></div>';
-      fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({images:drawings,pressureData:pressureData})})
-      .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+    var pressureData = pressures.length > 0 ? {
+      avg: pressures.reduce(function(a,b){return a+b;}, 0) / pressures.length,
+      peak: peakP,
+      lightPct: Math.round(pressures.filter(function(p){return p<0.3;}).length / pressures.length * 100)
+    } : null;
+
+    if (mode === "solo") {
+      showScreen("analysis");
+      document.getElementById("analysisBody").innerHTML = '<div style="text-align:center;padding-top:3.5rem"><div class="dots"><span></span><span></span><span></span></div><p style="margin-top:1rem;font-size:.88rem;color:var(--ink3)">Reading your drawings…</p></div>';
+      fetch("/api/analyze", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({images:drawings, pressureData:pressureData})})
+      .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
       .then(function(res){ if(!res.ok) throw new Error(res.d.error||"Error"); renderSolo(res.d); })
-      .catch(function(err){ document.getElementById("analysisBody").innerHTML='<p style="color:var(--accent);padding:2rem;text-align:center;font-size:.95rem">'+err.message+'</p>'; });
+      .catch(function(err){ document.getElementById("analysisBody").innerHTML = '<p style="color:var(--accent);padding:2rem;text-align:center">'+err.message+'</p>'; });
       return;
     }
-    fetch("/api/session/"+sessCode+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({slot:sessSlot,images:drawings,name:sessName,pressureData:pressureData})})
-    .then(function(){ show("waiting"); startPoll(); })
+    fetch("/api/session/"+sessCode+"/submit", {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({slot:sessSlot, images:drawings, name:sessName, pressureData:pressureData})})
+    .then(function(){ showScreen("waiting"); startPoll(); })
     .catch(function(err){ alert("Submit failed: "+err.message); });
   }
 
   function startPoll() {
-    if(pollTimer) clearInterval(pollTimer);
-    pollTimer=setInterval(function(){ checkAndAnalyze(false); }, 3500);
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(function(){ checkAndAnalyze(false); }, 3500);
   }
 
   function checkAndAnalyze(force) {
     fetch("/api/session/"+sessCode)
     .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(d.hasA && d.hasB){
-        if(pollTimer) clearInterval(pollTimer);
-        return fetch("/api/session/"+sessCode+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})
-        .then(function(r){ return r.json().then(function(res){ return {ok:r.ok,d:res,nameA:d.nameA,nameB:d.nameB}; }); })
-        .then(function(res){ if(!res.ok) throw new Error(res.d.error||"Error"); renderCompat(res.d,res.nameA,res.nameB); show("results"); });
-      } else if(force){ alert("Still waiting for the other person to finish."); }
+    .then(function(d) {
+      if (d.hasA && d.hasB) {
+        if (pollTimer) clearInterval(pollTimer);
+        return fetch("/api/session/"+sessCode+"/analyze", {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"})
+        .then(function(r){ return r.json().then(function(res){ return {ok:r.ok, d:res, nameA:d.nameA, nameB:d.nameB}; }); })
+        .then(function(res){ if(!res.ok) throw new Error(res.d.error||"Error"); renderCompat(res.d, res.nameA, res.nameB); showScreen("results"); });
+      } else if (force) { alert("Still waiting for the other person to finish."); }
     })
     .catch(function(err){ if(force) alert("Error: "+err.message); });
   }
 
-  function pill(t,i){ return '<span class="pill '+["pw","pc","pn"][i%3]+'">'+t+'</span>'; }
+  function pill(t, i) { return '<span class="pill '+["pw","pc","pn"][i%3]+'">'+t+'</span>'; }
 
-  function scoreRows(scores){
-    return Object.entries(scores||{}).map(function(kv){
-      var k=kv[0],v=kv[1];
+  function scoreRows(scores) {
+    return Object.entries(scores||{}).map(function(kv) {
+      var k=kv[0], v=kv[1];
       return '<div class="srow"><span class="slbl">'+k.charAt(0).toUpperCase()+k.slice(1)+'</span>'+
-        '<div class="sbar"><div class="sfill" style="width:'+v+'%;background:'+(SC[k]||"#b8441e")+'"></div></div>'+
+        '<div class="sbar"><div class="sfill" style="width:'+v+'%;background:'+(SCORES_COLORS[k]||"#b8441e")+'"></div></div>'+
         '<span class="sval">'+v+'</span></div>';
     }).join("");
   }
 
-  function mbtiCard(m){
-    if(!m||!m.type) return "";
-    var bars=[{l:"I",r:"E",v:m.ei,c:"#6b4c8a"},{l:"S",r:"N",v:m.sn,c:"#3d6652"},{l:"T",r:"F",v:m.tf,c:"#b8441e"},{l:"J",r:"P",v:m.jp,c:"#2a4a7a"}];
-    var barsHtml=bars.map(function(b){
+  function mbtiCard(m) {
+    if (!m || !m.type) return "";
+    var bars = [{l:"I",r:"E",v:m.ei,c:"#6b4c8a"},{l:"S",r:"N",v:m.sn,c:"#3d6652"},{l:"T",r:"F",v:m.tf,c:"#b8441e"},{l:"J",r:"P",v:m.jp,c:"#2a4a7a"}];
+    var barsHtml = bars.map(function(b){
       return '<div class="mrow"><span class="mL">'+b.l+'</span><div class="mtrack"><div class="mfill" style="width:'+b.v+'%;background:'+b.c+'"></div></div><span class="mR">'+b.r+'</span></div>';
     }).join("");
     return '<div class="mcard"><div class="mtype">'+m.type+'</div>'+
@@ -688,59 +703,52 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
       '<div class="mbars">'+barsHtml+'</div><div class="msketch">'+m.sketch+'</div></div>';
   }
 
-  function renderSolo(d){
-    var pills=(d.traits||[]).map(pill).join("");
-    var elems=["house","tree","person"].filter(function(k){return d[k];}).map(function(k){
+  function renderSolo(d) {
+    var pills = (d.traits||[]).map(pill).join("");
+    var elems = ["house","tree","person"].filter(function(k){return d[k];}).map(function(k){
       return '<div class="rcard"><div class="rlabel">'+k+'</div><p>'+d[k]+'</p></div>';
     }).join("");
-    document.getElementById("analysisBody").innerHTML=
+    document.getElementById("analysisBody").innerHTML =
       '<div class="rcard"><div class="rlabel">Overview</div><p>'+(d.overview||"")+'</p><div class="pills">'+pills+'</div></div>'+
       mbtiCard(d.mbti)+elems+
       '<div class="rcard"><div class="rlabel">Dimensions</div><div class="srows">'+scoreRows(d.scores)+'</div></div>'+
-      (d.shadow?'<div class="rcard" style="border-left:3px solid var(--accent)"><div class="rlabel">Shadow</div><p style="font-style:italic">'+d.shadow+'</p></div>':"");
+      (d.shadow ? '<div class="rcard" style="border-left:3px solid var(--accent)"><div class="rlabel">Shadow</div><p style="font-style:italic">'+d.shadow+'</p></div>' : "");
   }
 
-  function personBlock(p,name){
-    if(!p) return "";
-    var pills=(p.traits||[]).map(pill).join("");
-    return '<div class="rcard"><div class="rlabel">'+name+'</div><p style="margin-bottom:8px">'+(p.summary||"")+'</p>'+
-      '<div class="pills">'+pills+'</div><div class="srows" style="margin-top:8px">'+scoreRows(p.scores)+'</div></div>'+mbtiCard(p.mbti);
+  function personBlock(p, name) {
+    if (!p) return "";
+    var pills = (p.traits||[]).map(pill).join("");
+    return '<div class="rcard"><div class="rlabel">'+name+'</div><p style="margin-bottom:7px">'+(p.summary||"")+'</p>'+
+      '<div class="pills">'+pills+'</div><div class="srows" style="margin-top:7px">'+scoreRows(p.scores)+'</div></div>'+mbtiCard(p.mbti);
   }
 
-  function renderCompat(d,nameA,nameB){
-    var score=d.compatScore||72;
-    var sc=score>=75?"var(--sage)":score>=50?"var(--gold)":"var(--accent)";
-    document.getElementById("resultsBody").innerHTML=
+  function renderCompat(d, nameA, nameB) {
+    var score = d.compatScore || 72;
+    var sc = score>=75 ? "var(--sage)" : score>=50 ? "var(--gold)" : "var(--accent)";
+    document.getElementById("resultsBody").innerHTML =
       '<div class="chero"><div class="cscore" style="color:'+sc+'">'+score+'</div>'+
       '<div class="clbl">'+(d.compatLabel||"Compatibility")+'</div>'+
-      (d.chemistryNote?'<div class="cchem">“'+d.chemistryNote+'”</div>':"")+'</div>'+
-      '<div class="twocol">'+personBlock(d.personA,nameA||"Person A")+personBlock(d.personB,nameB||"Person B")+'</div>'+
+      (d.chemistryNote ? '<div class="cchem">“'+d.chemistryNote+'”</div>' : "")+'</div>'+
+      '<div class="twocol">'+personBlock(d.personA, nameA||"Person A")+personBlock(d.personB, nameB||"Person B")+'</div>'+
       '<div class="twocol">'+
       '<div class="rcard"><div class="rlabel">Shared strengths</div><p>'+(d.sharedStrengths||"")+'</p></div>'+
       '<div class="rcard"><div class="rlabel">Growth edges</div><p>'+(d.growthEdges||"")+'</p></div></div>';
   }
 
-  window.addEventListener("resize", function(){
-    if(!document.getElementById("draw").classList.contains("off")) resizeCanvas();
+  window.addEventListener("resize", function() {
+    if (!document.getElementById("draw").classList.contains("off")) resizeCanvas();
   });
 
-  var params=new URLSearchParams(window.location.search);
-  var joinParam=params.get("join");
-  if(joinParam){
-    document.getElementById("joinCode").value=joinParam.toUpperCase();
+  // Handle ?join= param
+  var joinParam = new URLSearchParams(window.location.search).get("join");
+  if (joinParam) {
+    document.getElementById("joinCode").value = joinParam.toUpperCase();
     document.getElementById("lobbyCreate").classList.remove("off");
     document.getElementById("lobbyWaiting").classList.add("off");
-    show("lobby");
+    showScreen("lobby");
   }
 
-  // Block pinch zoom
-  document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive:false});
-  document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, {passive:false});
-  document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {passive:false});
-  document.addEventListener('touchmove', function(e){
-    if(e.touches.length > 1) e.preventDefault();
-  }, {passive:false});
-  })();
+})();
 </script>
 </body>
 </html>
