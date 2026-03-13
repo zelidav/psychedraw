@@ -97,10 +97,14 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 .upload-btn:active{background:#feeee5;transform:scale(.96)}
 .upload-btn svg{flex-shrink:0}
 
-.nextbtn{background:var(--accent);color:#fff;border:none;border-radius:9px;
-  padding:0 16px;height:40px;font-family:"DM Sans",sans-serif;font-size:.88rem;
-  font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .12s}
-.nextbtn:active{background:var(--accent2)}
+.smart-btn{display:flex;align-items:center;gap:6px;padding:0 14px;height:40px;
+  border-radius:9px;font-family:"DM Sans",sans-serif;font-size:.85rem;font-weight:500;
+  cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap;border:none}
+.smart-btn.upload-state{background:#fff8f5;color:var(--accent);border:1.5px dashed var(--accent)}
+.smart-btn.upload-state:active{background:#feeee5}
+.smart-btn.next-state{background:var(--accent);color:#fff;border:1.5px solid var(--accent)}
+.smart-btn.next-state:active{background:var(--accent2)}
+.upload-icon{flex-shrink:0;transition:opacity .15s}
 
 /* OVERLAY / TRANSITION */
 .overlay{position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;
@@ -266,7 +270,6 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
   </div>
   <div class="step-hint" id="stepHint">Draw anything that feels right &#8212; no artistic talent required!</div>
   <canvas id="c"></canvas>
-  <input type="file" id="fileInput" accept="image/*" style="display:none">
   <div class="toolbar">
     <div class="tbg">
       <button class="tbb on" id="btnPen">
@@ -284,11 +287,11 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
       <div class="cdot" data-color="#b8820a" style="background:#b8820a"></div>
     </div>
     <input type="range" class="szslider" id="brushSize" min="1" max="22" value="3">
-    <button class="upload-btn" id="btnUpload">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      Upload
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+    <button class="smart-btn upload-state" id="btnSmart">
+      <svg class="upload-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span class="smart-label">Upload photo</span>
     </button>
-    <button class="nextbtn" id="btnNext">Next &#8594;</button>
   </div>
 </div>
 
@@ -414,7 +417,7 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
   }
 
   canvas.addEventListener("touchstart", function(e){ e.preventDefault();
-    isDrawing=true; hasDrawn=true; var p=getXY(e); lx=p.x; ly=p.y;
+    isDrawing=true; hasDrawn=true; switchToNext(); var p=getXY(e); lx=p.x; ly=p.y;
     if(e.touches[0].force>0){ pressures.push(e.touches[0].force); if(e.touches[0].force>peakP) peakP=e.touches[0].force; }
     ctx.beginPath(); ctx.arc(lx,ly,(tool==="eraser"?sz*3.5:sz)/2,0,Math.PI*2);
     ctx.fillStyle=tool==="eraser"?"#fff":color; ctx.fill();
@@ -430,7 +433,7 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 
   canvas.addEventListener("touchend", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
   canvas.addEventListener("mousedown", function(e){
-    isDrawing=true; hasDrawn=true; var p=getXY(e); lx=p.x; ly=p.y;
+    isDrawing=true; hasDrawn=true; switchToNext(); var p=getXY(e); lx=p.x; ly=p.y;
     ctx.beginPath(); ctx.arc(lx,ly,(tool==="eraser"?sz*3.5:sz)/2,0,Math.PI*2);
     ctx.fillStyle=tool==="eraser"?"#fff":color; ctx.fill();
   });
@@ -442,8 +445,23 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
   canvas.addEventListener("mouseup", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
   canvas.addEventListener("mouseleave", function(){ if(isDrawing){ isDrawing=false; saveHistory(); } });
 
+  function switchToNext() {
+    var sb = document.getElementById("btnSmart");
+    if(!sb) return;
+    if(sb.classList.contains("upload-state")){
+      sb.classList.remove("upload-state"); sb.classList.add("next-state");
+      var lbl = step < 2 ? "Next →" : "Done ✓";
+      sb.innerHTML = '<span class="smart-label">'+lbl+'</span>';
+    }
+  }
+  function resetSmartBtn(s) {
+    var sb = document.getElementById("btnSmart");
+    if(!sb) return;
+    sb.classList.remove("next-state"); sb.classList.add("upload-state");
+    sb.innerHTML = '<svg class="upload-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="smart-label">Upload photo</span>';
+  }
   function initStep(s) {
-    step=s; hasDrawn=false; history=[];
+    step=s; hasDrawn=false; history=[]; resetSmartBtn(s);
     document.getElementById("stepLabel").textContent=STEPS[s].label;
     document.getElementById("stepHint").textContent=STEPS[s].hint;
     document.getElementById("btnNext").textContent=s<2?"Next →":"Done ✓";
@@ -517,8 +535,17 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
 
   document.getElementById("brushSize").addEventListener("input", function(){ sz=+this.value; });
 
-  document.getElementById("btnUpload").addEventListener("click", function(){
-    document.getElementById("fileInput").click();
+  var smartBtn = document.getElementById("btnSmart");
+  smartBtn.addEventListener("click", function(){
+    if(smartBtn.classList.contains("upload-state")){
+      document.getElementById("fileInput").click();
+    } else {
+      // act as Next
+      if(!hasDrawn){ if(!confirm("Nothing drawn yet \u2014 skip this step?")) return; }
+      captureStep();
+      if(step<2){ showOverlay(step+1); }
+      else { submitAll(); }
+    }
   });
 
   document.getElementById("fileInput").addEventListener("change", function(e){
@@ -532,7 +559,7 @@ canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crossha
           var sc=Math.min(r.width/img.width,r.height/img.height);
           var w=img.width*sc, h=img.height*sc;
           ctx.drawImage(img,(r.width-w)/2,(r.height-h)/2,w,h);
-          hasDrawn=true; saveHistory(); captureStep();
+          hasDrawn=true; switchToNext(); saveHistory(); captureStep();
         }, 60);
       }; img.src=ev.target.result;
     }; reader.readAsDataURL(file);
